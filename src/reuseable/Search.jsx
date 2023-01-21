@@ -1,5 +1,5 @@
 import React from 'react'
-import search from '../assets/tms/search.svg'
+import search from '../assets/tms/Search.svg'
 import styled from 'styled-components'
 
 function Search({placeholder,type,change,width,border,bdr,inputWidth,inputBcg}) {
