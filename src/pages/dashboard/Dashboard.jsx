@@ -253,7 +253,7 @@ const Adcard = styled.div`
     position: relative;
     max-width: 400px;
     /* background: url(${cardtemp}); */
-    /* border: 3px solid red; */
+
     img{
         position: relative;
         border-radius: 10px;
