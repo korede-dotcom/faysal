@@ -17,6 +17,11 @@ const Flex = styled.div`
     padding: 5px;
     /* width: 100%; */
     /* overflow: hidden; */
+
+    @media screen and (max-width:40em ) {
+        padding: 10px;
+        /* overflow: hidden; */
+    }
 `
 
 export default Row

@@ -54,12 +54,12 @@ const pageSize = 1
 
 const capture = React.useCallback(
   () => {
-//     const imageSrc = webcamRef.current.getScreenshot();
-//     const imageExt = imageSrc.split(';')[0].match(/jpeg|png|gif/)[0];
-// const imageData = imageSrc.split(',')[1];
-// const imageBlob = new Blob([imageData], { type: `image/${imageExt}` });
-// const imageFile = new File([imageBlob], 'image.jpg', { type: `image/${imageExt}` });
-//     setScreenshot(imageSrc);
+    // const imageSrc = webcamRef.current.getScreenshot();
+    const imageExt = imageSrc.split(';')[0].match(/jpeg|png|gif/)[0];
+const imageData = imageSrc.split(',')[1];
+const imageBlob = new Blob([imageData], { type: `image/${imageExt}` });
+const imageFile = new File([imageBlob], 'image.jpg', { type: `image/${imageExt}` });
+    // setScreenshot(imageSrc);
 const imageSrc = webcamRef.current.getScreenshot();
       setScreenshot(imageSrc);
   },
@@ -103,9 +103,30 @@ const modalclient = () => {
     setShowModal2(true)
     
 }
+const { mutate, isLoading:is_loading,isError} = useMutation({
+    mutationFn: createCustomer,
+    onSuccess: (data) => {
+     setShowModal(false)
+    // localStorage.setItem(JSON.stringify(data.tokem))
+    // Navigate("/dashboard");
+    },
+    onError: (data) =>{
+        console.log(data)
+    //    seterr(data.response.data.message)
+       setTimeout(()=>{
+        seterr("")
+    },2000)
+    // return 
+    }
+});
+
+
+
 
 const handleCreateAgentManager = (e) => {
+
     e.preventDefault();
+  
     // e.target.parentElement.close()
     // setShowModal(false)
 
@@ -155,6 +176,10 @@ const handleCreateAgentManager = (e) => {
          },
           registered_date:formattedDate
     })
+    if(!is_loading){
+        return setShowModal(false)
+
+    }
     
 }
 const handleCreateAgent = (e) => {
@@ -231,22 +256,7 @@ const handleSelection = option => {
 
 
 
-      const { mutate, isLoading:is_loading,isError} = useMutation({
-        mutationFn: createCustomer,
-        onSuccess: (data) => {
-         
-        // localStorage.setItem(JSON.stringify(data.tokem))
-        // Navigate("/dashboard");
-        },
-        onError: (data) =>{
-            console.log(data)
-        //    seterr(data.response.data.message)
-           setTimeout(()=>{
-            seterr("")
-        },2000)
-        // return 
-        }
-    });
+   
 
   const { data:customerlist,isLoading,refetch } = useQuery({
   
@@ -284,13 +294,13 @@ function TableHead () {
                 {/* {keys.map(d => ( */}
                 <td> 
                     <span>
-                        <p>CUSTOMER NAME</p>
+                        <p>NO</p>
                         <img src={sorting}/>
                     </span>
                 </td>
-                <td>
+                <td> 
                     <span>
-                        <p>CUSTOMER ID</p>
+                        <p> NAME</p>
                         <img src={sorting}/>
                     </span>
                 </td>
@@ -302,16 +312,29 @@ function TableHead () {
                 </td>
                 <td>
                     <span>
-                        <p>AMOUNT</p>
+                        <p>ADDRESS</p>
                         <img src={sorting}/>
                     </span>
                 </td>
                 <td>
                     <span>
-                        <p>STATUS</p>
+                        <p>EMAIL</p>
                         <img src={sorting}/>
                     </span>
                 </td>
+                <td>
+                    <span>
+                        <p>GENDER</p>
+                        <img src={sorting}/>
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        <p>DOB</p>
+                        <img src={sorting}/>
+                    </span>
+                </td>
+               
              
                 {/* ))} */}
             </thead>
@@ -324,6 +347,7 @@ const sorts = customerlist?.content?.map(d => {
         phoneNumber:d.phoneNumber,
         email:d.email,
         userName:d.userName,
+        status:d.status,
         gender:d.gender,
         address:d.address,
         identification_type:d.identification_type,
@@ -342,13 +366,15 @@ function TableData () {
             }
         })?.map((d,index) => (
             <tr key={d?.id} onClick={modalclient}>
+                <td>{index + 1}</td>
                 <td>{d?.name}</td>
-                <td>{d?.date_of_birth}</td>
-                <td>{d?.gender}</td>
                 <td>{d?.phoneNumber}</td>
+                <td>{d?.address}</td>
                 <td>{d?.email}</td>
-                <td>{d?.agent?.username}</td>
-                <td>{d?.agent?.phoneNumber}</td>
+                <td>{d?.gender}</td>
+                <td>{d?.date_of_birth}</td>
+                {/* <td>{d?.agent?.username}</td>
+                <td>{d?.agent?.phoneNumber}</td> */}
             </tr>
         ))
         
@@ -376,7 +402,7 @@ function TableData () {
             change={(e)=>setSearch(e.target.value)}
             placeholder="Search Terminal"
             />
-    
+{/*     
        <Button 
            icon={plus}
            text="Add New Customer"
@@ -384,7 +410,7 @@ function TableData () {
            bcg="#0A221C"
            color="#fff"
            clickEvent={modalBtn}
-           /> 
+           />  */}
 
 
 
@@ -470,7 +496,7 @@ function TableData () {
                         
                             </G2C>
                             <Button 
-                            text="SUBMIT"
+                            text={is_loading ? "Loading...." :"SUBMIT"}
                             width="50%"
                             color="#fff"
                             bcg="#0A221C"
@@ -544,7 +570,7 @@ const Client = styled.div`
     align-items: center;
     gap: 10px;
     padding: 30px;
-    overflow: hidden;
+    /* overflow: hidden; */
     overflow-y: scroll;
 
     .clientside1{
@@ -594,6 +620,16 @@ width: 100%;
      display: grid;
         gap: 20px;
         grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+
+        @media screen and (max-width:40em ) {
+        /* width: 45%; */
+        grid-template-columns: 1fr;
+        height: 300px;
+        overflow-x: hidden;
+            ::-webkit-scrollbar{
+                display: none;
+            }
+      }
      
         img{
             cursor: pointer;

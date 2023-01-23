@@ -32,65 +32,10 @@ import styled from "styled-components"
 import Button from '../../reuseable/Button'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import {AgentTotalCustomers,AgentTotalDeposit,Transactions} from "../../services/Dashboard"
+import {AgentTotalCustomers,AgentTotalDeposit,Transactions,AdminTotals,AdminDaily} from "../../services/Dashboard"
 import { useLocalStorage } from '../../hooks/GetRole'
 
-const data = [
-  {
-      amount:"300",tId:"272727", type:"credit", time:"2022:20:20"
-  },
-  {
-      amount:"300",tId:"272727", type:"test", time:"2022:20:20"
-  },
-  {
-      amount:"300",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"300",tId:"272727", type:"credit", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"test", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"credit", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"test", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"credit", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"withdraw", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"test", time:"2022:20:20"
-  },
-  {
-      amount:"3800",tId:"272727", type:"credit", time:"2022:20:20"
-  },
-]
+
 
 function Dashboard() {
 
@@ -114,26 +59,35 @@ const isAdmin = check === "ADMIN"
       });
     console.log("🚀 ~ file: Dashboard.jsx:115 ~ Dashboard ~ agenttotalcustomers", agenttotalcustomers)
     
+    const { data:admintTotals,isLoading:totalsLoading } = useQuery({
+        queryKey:['AdminTotals'],
+        queryFn: () => AdminTotals(),
+  
+      });
+    console.log("🚀 ~ file: Dashboard.jsx:67 ~ Dashboard ~ admintTotals", admintTotals)
+    // const { data:tranx,isLoading:loadingtranx } = useQuery({
+    //     queryKey:['Transactions'],
+    //     queryFn: () => Transactions(),
+  
+    //   });
+
+        
     const { data:tranx,isLoading:loadingtranx } = useQuery({
 
         
         queryKey:['Transactions'],
         queryFn: () => Transactions(),
-  
-        // onSuccess:(data) => {
-        //     console.log(tranx)
-        // }
-        // onError: (err) => {
-        //   setMessage(err?.response?.data?.detail || err.message);
-        //   setOpen(true);
-        // },
-        // enabled: Boolean(agentId),
       });
     console.log("🚀 ~ file: Dashboard.jsx:132 ~ Dashboard ~ tranx", tranx)
 
 const sortTranx = tranx?.content?.map(d => {
     return {
-        d
+        name:d?.agent,
+        amount:d?.amount,
+        tranxRef:d?.transaction_reference,
+        type:d?.transaction_type,
+        date:d?.transaction_date
+
     }
 })
 
@@ -148,6 +102,19 @@ const sortTranx = tranx?.content?.map(d => {
         // },
         // enabled: Boolean(agentId),
       });
+    console.log("🚀 ~ file: Dashboard.jsx:105 ~ Dashboard ~ agentTotalDeposit", agentTotalDeposit)
+
+    const { data:adminDaily,isLoading:loadingdaily } = useQuery({
+  
+        queryKey:['AdminDaily'],
+        queryFn: () => AdminDaily(),
+        // onError: (err) => {
+        //   setMessage(err?.response?.data?.detail || err.message);
+        //   setOpen(true);
+        // },
+        // enabled: Boolean(agentId),
+      });
+    console.log("🚀 ~ file: Dashboard.jsx:116 ~ Dashboard ~ adminDaily", adminDaily)
 
     // const { data:agentTotalDeposit,isLoading:loadingagentTotalDeposit } = useQuery({
   
@@ -160,7 +127,6 @@ const sortTranx = tranx?.content?.map(d => {
     //     // enabled: Boolean(agentId),
     //   });
 
-      console.log(agentTotalDeposit)
     
 
 
@@ -200,21 +166,21 @@ const sortTranx = tranx?.content?.map(d => {
         {
             isAdmin ?
             <div className='gridcard'>
-                        <Card name="Total Client Registered" amount="500" amountText="Total Agents" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
-                        <Card name="Total Client Registered" amount="500" amountText="Total Amount" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
-                        <Card name="Total Client Registered" amount="500" amountText="Total C" cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
-                        <Card name="Total Client Registered" amount="500" amountText="Total Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
+                        <Card name="Total Customers" amount={admintTotals?.totalCustomers || 0} amountText="Total Customers" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+                        <Card name="Total Client Registered" amount={admintTotals?.totalPayOuts || 0} amountText="Total Payouts" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+                        <Card name="Total Client Registered" amount={admintTotals?.totalRemittance|| 0}  amountText="Total Remittance" cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+                        <Card name="Total Client Registered" amount={admintTotals?.totalSavings|| 0}  amountText="Total Savings" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
                     
             </div> :
              <div className='gridcard'>
              <Card name="Total Client Registered" amount={agenttotalcustomers} amountText="Total Customer Count" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
-             <Card name="Total Client Registered" amount="-" amountText="Total Amount" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+             <Card name="Total Client Registered" amount="-" amountText="Total Payout" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
              {/* <Card name="Total Client Registered" amount="500" amountText="Total " cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/> */}
              <Card name="Total Client Registered" amount={agentTotalDeposit}  amountText="Total Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
          
             </div>
         }
-                <h4>Quick Actions</h4>
+                <h4>Today Totals</h4>
             <div className='gridcard'>
                 <Button text="register Client" width="100%" bcg="#fff" icon={card5} ih="35px"  clickEvent={() => navigate('/customers')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
                 <Button text="Activity Sumary" width="100%" bcg="#fff" icon={card2} ih="35px" color="#000" clickEvent={() => navigate('/savings')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"  />
@@ -230,8 +196,8 @@ const sortTranx = tranx?.content?.map(d => {
                 <Progress/>
             </div> */}
             <div className='chart2'>
-                <Bar/>
-                <Pie/>
+                {/* <Bar/>
+                <Pie/> */}
             </div>
       </Content>
       <Trasactions data={isAdmin ? sortTranx : []} />
@@ -253,6 +219,11 @@ const Adcard = styled.div`
     position: relative;
     max-width: 400px;
     /* background: url(${cardtemp}); */
+
+    @media screen and (max-width:40em) {
+      display: none;
+    }
+           
 
     img{
         position: relative;

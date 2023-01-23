@@ -20,7 +20,7 @@ import Switch from '../../reuseable/Switch'
 import card from '../../assets/card1.svg'
 import Selector from '../../reuseable/Selector'
 import { useMutation,useQuery } from '@tanstack/react-query'
-import {createSavings,getAdminSavings,agentSavingsList,getAdminCustomersList,getAgentCustomersList} from "../../services/Dashboard"
+import {createSavings,getAdminSavings,agentSavingsList,getAdminCustomersList,getAgentCustomersList,depositFunds} from "../../services/Dashboard"
 
 function Savings() {
     const [selectedOption, setSelectedOption] = useState(null);
@@ -43,10 +43,14 @@ const [custom, setcustom] = useState(false)
 const [cdate, setdate] = useState(false)
 const [enddate, setEnddate] = useState(false)
 const [search, setSearch] = useState('')
+const [currentSavingns, setCurrentSavings] = useState('')
+const [amount,setAmount] = useState('')
+const [id,setId] = useState('')
 
 console.log(cdate)
 
 const check = JSON.parse(localStorage.getItem("role"))
+console.log("🚀 ~ file: Savings.jsx:50 ~ Savings ~ check", check)
 
 const isAdmin = check === "ADMIN"
 
@@ -129,6 +133,7 @@ const handleSelection3 = option => {
     // },
     // enabled: Boolean(agentId),
   });
+  console.log("🚀 ~ file: Savings.jsx:133 ~ Savings ~ savinglist", savinglist)
 
   const { data:agentsavinglist,isLoading:loadingagentsavings } = useQuery({
   
@@ -140,6 +145,7 @@ const handleSelection3 = option => {
     // },
     // enabled: Boolean(agentId),
   });
+  console.log("🚀 ~ file: Savings.jsx:143 ~ Savings ~ agentsavinglist", agentsavinglist)
 
   const { data:admincustomerlist,isLoading:loadingadmincustomerlist } = useQuery({
   
@@ -176,12 +182,6 @@ function TableHead () {
                 </td>
                 <td> 
                     <span>
-                        <p>ID</p>
-                        <img src={sorting}/>
-                    </span>
-                </td>
-                <td> 
-                    <span>
                         <p>CODE</p>
                         <img src={sorting}/>
                     </span>
@@ -198,18 +198,7 @@ function TableHead () {
                         <img src={sorting}/>
                     </span>
                 </td>
-                <td>
-                    <span>
-                        <p>START DATE</p>
-                        <img src={sorting}/>
-                    </span>
-                </td>
-                <td>
-                    <span>
-                        <p>END DATE</p>
-                        <img src={sorting}/>
-                    </span>
-                </td>
+              
      
             
                
@@ -230,23 +219,43 @@ const sorted = savinglist?.content?.map(d => {
         // phoneNumber:d.cu
     }
 })
+const sortedAgent = agentsavinglist?.content?.map(d => {
+    
+    return{
+        id:d.id,
+        savingsId:d.savingsId,
+        balance:d.balance,
+        tenure:d.tenure,
+        startDate:d.startDate,
+        endDate:d.endDate,
+        // phoneNumber:d.cu
+    }
+})
 
-function TableData () {
+const handleAgentSavings = (id) => {
+    const newSavings = sortedAgent.filter(d => d.id === id)
+    console.log("🚀 ~ file: Savings.jsx:252 ~ handleAgentSavings ~ newSavings", newSavings)
+    setCurrentSavings(newSavings)
+    setId(id)
+  
+    setShowModal2(true)
+   
+}
+
+function TableData ({data}) {
     return (
-       sorted?.filter(val => {
+       data?.filter(val => {
         if(!search?.length) return val
         else if(Object.values(val).some(value => value?.toString()?.toLowerCase()?.includes(search))){
             return val
         }
     })?.map((d,index) => (
-            <tr key={d.id} onClick={() => setShowModal2(true)}>
+            <tr key={d.id} onClick={isAdmin ? null :() => handleAgentSavings(d.id)}>
                 <td>{index + 1}</td>
-                <td>{d?.id}</td>
                 <td>{d?.savingsId}</td>
                 <td>{d?.balance}</td>
                 <td>{d?.tenure}</td>
-                <td>{d?.startDate}</td>
-                <td>{d?.endDate}</td>
+            
                 {/* <td>{d?.customerName}</td>     */}
             </tr>
         ))
@@ -276,9 +285,42 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
         //     setShowModal(false)
         //     setinfo('')
         // }, 2000);
+        setShowModal(false)
+        window.location.reload()
         refetch()
     }
   });
+
+const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation({
+    queryKey:['id','amount',id,amount],
+    mutationFn:  depositFunds(id,amount),
+    // queryFn: () => depositFunds(id,amount),
+
+    onError: (err) => {
+     console.log(err)
+  
+    
+    },
+    onSuccess:(data) =>{
+        // setinfo('category created')
+ 
+        // if(!data.response.data.status){
+        //     setTimeout(() => {
+        //         setinfo('unable to create category')
+        //     }, 1000);
+        //     setinfo('')
+        // }
+        // setTimeout(() => {
+        //     setShowModal(false)
+        //     setinfo('')
+        // }, 2000);
+        refetch()
+    }
+  });
+
+  const depositFunc = () => {
+    deposit()
+}
 
   const handleSavings = (e) => {
     e.preventDefault()
@@ -287,8 +329,8 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
             savingsId:savingsId,
             balance: balance,
             
-            tenure:cdate,
-            endDate:enddate,
+            tenure:tenure,
+            
             
             customer: {
             
@@ -297,6 +339,8 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
             
             }
     )
+    
+
   }
 
 
@@ -326,13 +370,15 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
 
 
 
+
   return (
    <MainLayout>
+    
           <Table 
     search={false} 
     // data={data}  
     // isCheck={true}   
-    dataComponent={<TableData data={isAdmin ? savinglist : agentsavinglist || []}/>}
+    dataComponent={<TableData data={isAdmin ? sorted : sortedAgent}/>}
     dataHead={<TableHead/>}
 >
         <div>
@@ -346,10 +392,10 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
             bdr="20px"
             border=".1px solid #000" 
             change={(e)=>setSearch(e.target.value)}
-            placeholder="Search Aquirers"
+            placeholder="Search savings"
             />
 
-      
+      {isAdmin ? "" :
        <Button 
            icon={plus}
            text="Create savings"
@@ -358,6 +404,7 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
            color="#fff"
            clickEvent={modalBtn}
            /> 
+    }
       
        {/* <Button 
            icon={plus}
@@ -378,9 +425,10 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
                                 <Selector isSearch={true} data={ agentSavingsList} selected={handleSelection3}/>
             </div> */}
             <Input type="number" textStyle="bold" text="Balance" name="balance"  change={(e) => setbalance(e.target.value)} />
+            <Input type="tenure" textStyle="bold" text="Tenure" name="tenure"  change={(e) => settenure(e.target.value)} />
             {/* <Input type="text" textStyle="bold" text="savings type"/> */}
-            <Input type="date" textStyle="bold" text="Start date"  change={(e) => setdate(e.target.value)} />
-            <Input type="date" textStyle="bold" text="Due date"  change={(e) => setEnddate(e.target.value)} />
+            {/* <Input type="date" textStyle="bold" text="Start date"  change={(e) => setdate(e.target.value)} />
+            <Input type="date" textStyle="bold" text="Due date"  change={(e) => setEnddate(e.target.value)} /> */}
             <div>
                                 <p className='text'>Customer</p>
                                 <br/>
@@ -390,7 +438,7 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
            
             </G2C>
             <Button 
-            text="SUBMIT"
+            text={savingCreationloading ? "Loading..." : "SUBMIT" }
             width="50%"
             bcg="#0A221C"
             color="#fff"
@@ -403,32 +451,33 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
 
 
                     {showModal2 &&
-                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Customer Deposit"  formval={(e) => e.preventDefault()}> 
+                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Savings Information"  formval={(e) => e.preventDefault()}> 
                               {/* <G2C> */}
                               <Client>
                                 <div className='clientside1'>
                                 <div className='details'>
                                 <h4 style={{borderBottom:'1 solid #000'}}>Savings Details</h4>
-                                <p>Name:  Saving 101</p>
-                                <p>Due Date : 10-12-2022</p>
+                                <p>SAVINGS ID: {currentSavingns[0]?.savingsId} </p>
+                                <p>BALANCE: {currentSavingns[0]?.balance} </p>
+                                <p>TENURE : {currentSavingns[0]?.tenure}</p>
                                 
-                                
+                                 <Input type="text" textStyle="bold" name="region" change={(e) => setAmount(e.target.value)} placeholder="Enter Amount"/> 
+                                <p onClick={depositFunc} className="btn">{showInput ? "SUBMIT" : "DEPOSIT"}</p>
 
                                 </div>
 
                                 </div>
                                 <div className='clientside2'>
                           
-                                <img src={card} height="100px"/> 
+                                {/* <img src={card} height="100px"/>  */}
                                 <div className='details'>
-                                <p><small>Name</small>:  Korede</p>
+                                {/* <p><small>Name</small>:  Korede</p>
                                 <p><small>PhonNumber</small> : 0808888888</p>
                                 <p><small>Email</small> : korede@live.com</p>
                                 <p><small>Address</small> : 11 lagos island</p>
-                                <p><small>Total Savings</small> : #4000 </p>
+                                <p><small>Total Savings</small> : #4000 </p> */}
                                         
-                                        {showInput && <Input type="text" textStyle="bold" name="region" change={handleOnChange} placeholder="Enter Amount"/> }
-                                <p onClick={() => setshowInput(!showInput)} className="btn">{showInput ? "SUBMIT" : "DEPOSIT"}</p>
+                                     
                                 
                         
 
@@ -454,7 +503,7 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
    </MainLayout>
   )
 }
-
+  
 const TableContext = styled.div`
   
 
@@ -465,10 +514,20 @@ width: 100%;
      display: grid;
         gap: 20px;
         grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+
+        @media screen and (max-width:40em ) {
+        /* width: 45%; */
+        grid-template-columns: 1fr;
+        height: 300px;
+        overflow-x: hidden;
+            ::-webkit-scrollbar{
+                display: none;
+            }
+      }
 `
 
 const Client = styled.div`
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -477,12 +536,21 @@ const Client = styled.div`
     .clientside1{
        
         /* padding-inline-end: 30px; */
-        display: inline-flex;
+        /* display: inline-flex; */
         justify-content: start;
         align-items: center;
-        width: 50%;
+        /* width: 50%; */
         flex-direction: column;
         gap: 10px;
+        
+        .btn{
+            background-color: #2d3748;
+           display: inline-flex;
+           justify-content: center;
+           color: #fff;
+           border-radius: 5px;
+           padding-block: 10PX;
+        }
         .details{
             display: flex;
             flex-direction: column;

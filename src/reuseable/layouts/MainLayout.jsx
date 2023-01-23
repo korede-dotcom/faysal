@@ -42,9 +42,16 @@ const Contents = styled.div`
     flex-direction: column;
     gap: 25px;
     /* padding: 20px; */
-    height: 100%;
+    height:70%;
     width: 100%;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow: hidden;
+    @media screen and (max-width:40em ) {
+        padding: 10px;
+        margin-top: 20%;
+        /* overflow: hidden; */
+    }
+    
     /* background-color:#e6e6e6; */
     ::-webkit-scrollbar{
         display: none;

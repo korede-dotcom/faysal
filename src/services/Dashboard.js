@@ -93,11 +93,12 @@ const baseurl = BASE_URL
     );
     return data;
   };
-  export const depositFunds = async (amount) => {
-    const { data } = await Axios.get(
-      `${baseurl}deposit-money/?amount=${amount}`,
+  export const depositFunds = async (id,amount) => {
+    const { data } = await Axios.post(
+      `${baseurl}deposit-money/${id}?amount=${amount}`,
     );
     return data;
+
   };
   export const Transactions = async (page,pageSize) => {
     const { data } = await Axios.get(
@@ -141,6 +142,31 @@ const baseurl = BASE_URL
     export const getAdminRemitance= async (page,pageSize) => {
       const { data } = await Axios.get(
         `${baseurl}admin-remittance-list`,
+      );
+      return data;
+    };
+    export const AdminTotals = async (page,pageSize) => {
+      const { data } = await Axios.get(
+        `${baseurl}overall-admin-totals`,
+      );
+      return data;
+    };
+
+    export const AdminDaily = async (page,pageSize) => {
+      const { data } = await Axios.get(
+        `${baseurl}daily-admin-totals`,
+      );
+      return data;
+    };
+    export const AdminTotalRemits = async (page,pageSize) => {
+      const { data } = await Axios.get(
+        `${baseurl}admin-total-remittance`,
+      );
+      return data;
+    };
+    export const getCurrentUser = async (name) => {
+      const { data } = await Axios.get(
+        `${baseurl}user-profile/${name}`,
       );
       return data;
     };

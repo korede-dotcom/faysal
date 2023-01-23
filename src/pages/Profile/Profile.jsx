@@ -27,9 +27,27 @@ import profilebg from '../../assets/profilebg.svg'
 import avi from '../../assets/avi.svg'
 import cam from '../../assets/cam.svg'
 import Webcam from 'react-webcam';
+import {getCurrentUser} from "../../services/Dashboard"
+import {useMutation,useQuery} from "@tanstack/react-query"
 
 function Profile() {
+    const check = JSON.parse(localStorage.getItem("role"))
+    const cUser = JSON.parse(localStorage.getItem("userId"))
 
+    const isAdmin = check === "ADMIN"
+
+
+    const { data:currentuser,isLoading:loadinguser} = useQuery({
+  
+        queryKey:['getCurrentUser'],
+        queryFn: () => getCurrentUser(cUser),
+        // onError: (err) => {
+        //   setMessage(err?.response?.data?.detail || err.message);
+        //   setOpen(true);
+        // },
+        // enabled: Boolean(agentId),
+      });
+    console.log("🚀 ~ file: Profile.jsx:49 ~ Profile ~ currentuser", currentuser)
 
 
   return (
@@ -43,16 +61,15 @@ function Profile() {
         </Header>
         <div className='profilecard'>
             <img src={avi}/>
-            <h1>Olumide Bamidele</h1>
+            <h1>{currentuser?.name}</h1>
         </div>
         <G2C>
-            <Input type="text"  text="First name"/>
-            <Input type="text"  text="Last name"/>
-            <Input type="text"  text="Phone Number"/>
-            <Input type="text"  text="Address"/>
-            <Input type="text"  text="First name"/>
-            <Input type="text"  text="Address"/>
-            <Input type="text"  text="First name"/>
+            <Input type="text"  text="Name" readonly={true} isDisplay={true} value={currentuser?.name}/>
+            <Input type="text"  text="Email" value={currentuser?.email}/>
+            <Input type="text"  text="Phone Number" value={currentuser?.phoneNumber}/>
+            <Input type="text"  text="Username" value={currentuser?.userName} />
+            <Input type="text"  text="Role" value={currentuser?.role[0]?.name}/>
+          
         </G2C>
         </div>
 
@@ -67,6 +84,7 @@ const ProfileCont = styled.div`
     display: flex;
     flex-direction: column;
     padding: 30px;
+  
     
     .cont{
         gap: 40px;
@@ -85,6 +103,10 @@ const ProfileCont = styled.div`
         padding: 20px;
         align-items: center;
         gap: 30px;
+
+        @media screen and (max-width:40em ) {
+        flex-direction: column;
+      }
     }
 
 
@@ -109,6 +131,11 @@ width: 100%;
      display: grid;
         gap: 20px;
         grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+
+        @media screen and (max-width:40em ) {
+        /* width: 45%; */
+        grid-template-columns: 1fr;
+      }
 `
 
 

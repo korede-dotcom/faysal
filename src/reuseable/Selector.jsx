@@ -23,7 +23,7 @@ function Selector({data,selected,value,size,isSearch}) {
   
       
         styles={{
-          control: styles => ({ ...styles, backgroundColor: 'white',padding:'0.8px',border:'.6px solid rgba(135, 135, 135, 1)',borderRadius:'5px',outline:'none',fontSize:'13px',scale:`${size}`}),
+          control: styles => ({ ...styles, backgroundColor: 'white',padding:'0.8px',border:'.6px solid rgba(135, 135, 135, 1)',borderRadius:'5px',outline:'none',fontSize:'10px',scale:`${size}`}),
         }}
       />
     </Selects>
@@ -31,15 +31,16 @@ function Selector({data,selected,value,size,isSearch}) {
 }
 
 const Selects = styled.div`
+   /* font-size: 10px !important; */
 
 @media screen and (max-width:80em) {
         width: 90%;
       }
       @media screen and (max-width:40em) {
-        width: 70%;
+        width: 100%;
       }
       @media screen and (max-width:30em) {
-        width: 50%;
+        width: 100%;
       }
 `
 

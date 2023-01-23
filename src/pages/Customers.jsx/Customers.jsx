@@ -25,7 +25,7 @@ import cac from '../../assets/uploadimg.svg'
 import card from '../../assets/card1.svg'
 import cam from '../../assets/cam.svg'
 import Webcam from 'react-webcam';
-import {getAdminCustomersList,createCustomer,AdminUserList,getAgentCustomersList} from '../../services/Dashboard'
+import {getAdminCustomersList,createCustomer,AdminUserList,getAgentCustomersList,getCurrentUser} from '../../services/Dashboard'
 import {useQuery,useMutation} from '@tanstack/react-query'
 
 function Aquirers() {
@@ -73,7 +73,32 @@ const imageSrc = webcamRef.current.getScreenshot();
   [webcamRef]
 );
 
-console.log(screenshot)
+const currentDate = new Date();
+const formattedDate = currentDate.toISOString().slice(0, 10);
+const page = 1
+const pageSize = 1
+
+const check = JSON.parse(localStorage.getItem("role"))
+const cUser = JSON.parse(localStorage.getItem("userId"))
+
+const isAdmin = check === "AGENT"
+
+
+const { data:currentuser,isLoading:loadinguser} = useQuery({
+
+    queryKey:['getCurrentUser'],
+    queryFn: () => getCurrentUser(cUser),
+    // onError: (err) => {
+    //   setMessage(err?.response?.data?.detail || err.message);
+    //   setOpen(true);
+    // },
+    // enabled: Boolean(agentId),
+  });
+console.log("🚀 ~ file: Customers.jsx:92 ~ Aquirers ~ currentuser", currentuser)
+
+
+
+
 useEffect(()=> {
 
     if(screenshot){
@@ -83,6 +108,23 @@ useEffect(()=> {
         setremoval(false)
     }
 },[screenshot])
+
+const { mutate, isLoading:is_loading,isError} = useMutation({
+    mutationFn: createCustomer,
+    onSuccess: (data) => {
+     
+    // localStorage.setItem(JSON.stringify(data.tokem))
+    // Navigate("/dashboard");
+    },
+    onError: (data) =>{
+        console.log(data)
+    //    seterr(data.response.data.message)
+       setTimeout(()=>{
+        seterr("")
+    },2000)
+    // return 
+    }
+});
 
 
 const [superAgent,setSuperAgent] = useState({
@@ -123,8 +165,7 @@ const modalclient = () => {
 const handleCreateAgentManager = (e) => {
     e.preventDefault();
     // e.target.parentElement.close()
-    setShowModal(false)
-        e.preventDefault();
+    // setShowModal(false)
     
         mutate({
             name: name,
@@ -144,13 +185,14 @@ const handleCreateAgentManager = (e) => {
                  }
              ],
             agent: {
-                   "id":3
+                   id:currentuser.id
              },
               registered_date:formattedDate
         })
         
     
 }
+
 
 const handleCreateAgent = (e) => {
     e.preventDefault();
@@ -201,6 +243,7 @@ const handleOnChange = (e) => {
 const handleSelection = option => {
     setSelectedOption(option);
     setfilterby(option?.value)
+    setgender(option?.value)
         // setCreateAgentManager((prev) => {
         //     let {state} = prev
         //     return {
@@ -243,7 +286,6 @@ const handleSelection = option => {
     // },
     // enabled: Boolean(page,pageSize),
     onSuccess:(d) => {
-        console.log(d)
     }
   });
   const { data:AgentCustomersList } = useQuery({
@@ -267,20 +309,7 @@ const handleSelection = option => {
       }
   })
 
-  const sorts = AgentCustomersList?.content?.map(d => {
-    return {
-        name:d?.name,
-        phoneNumber:d?.phoneNumber,
-        email:d?.email,
-        userName:d?.userName,
-        gender:d?.gender,
-        address:d?.address,
-        identification_type:d?.identification_type,
-        date_of_birth:d?.date_of_birth,
-        agentName:d?.agent?.name,
-        agentPhoneNumber:d?.agent?.phoneNumber
-    }
-})
+
 
 function TableHead () {
     return (
@@ -300,13 +329,7 @@ function TableHead () {
                 </td>
                 <td>
                     <span>
-                        <p>DOB</p>
-                        <img src={sorting}/>
-                    </span>
-                </td>
-                <td>
-                    <span>
-                        <p>GENDER</p>
+                        <p>ADDRESS</p>
                         <img src={sorting}/>
                     </span>
                 </td>
@@ -329,6 +352,22 @@ function TableHead () {
     )
 }
 
+const sorts = customerlist?.content?.map(d => {
+    return {
+        name:d.name,
+        phoneNumber:d.phoneNumber,
+        email:d.email,
+        userName:d.userName,
+        status:d.status,
+        gender:d.gender,
+        address:d.address,
+        identification_type:d.identification_type,
+        date_of_birth:d.date_of_birth,
+        agentName:d.agent.name,
+        agentPhoneNumber:d.agent.phoneNumber
+    }
+})
+
 function TableData () {
     return (
         sorts?.filter(val => {
@@ -340,22 +379,23 @@ function TableData () {
             <tr key={d?.id} onClick={modalclient}>
                 <td>{index + 1}</td>
                 <td>{d?.name}</td>
-                <td>{d?.date_of_birth}</td>
-                <td>{d?.gender}</td>
-                <td>{d?.phoneNumber}</td>
+                <td>{d?.address}</td>
                 <td>{d?.email}</td>
-                {/* <td>{d?.agent?.username}</td> */}
-                <td>{d?.agent?.phoneNumber}</td>
+                <td>{d?.phoneNumber}</td>
+                {/* <td>{d?.gender}</td> */}
+                {/* <td>{d?.date_of_birth}</td> */}
+                {/* <td>{d?.agent?.username}</td>
+                <td>{d?.agent?.phoneNumber}</td> */}
             </tr>
         ))
+        
     )
 }
-
   return (
    <MainLayout>
           <Table 
     search={false} 
-    dataComponent={<TableData/>}
+    dataComponent={<TableData />}
     dataHead={<TableHead/>} 
 >
         <div>
@@ -369,7 +409,7 @@ function TableData () {
             bdr="20px"
             border=".1px solid #000" 
             change={(e)=>console.log(e.target.value)}
-            placeholder="Search Terminal"
+            placeholder="Search"
             />
     
        <Button 
@@ -420,7 +460,7 @@ function TableData () {
                         <div className='forupload'>
 
                             <img src={cam}
-                            onClick={() => setshowImg(true)}/>
+                            onClick={() => setshowImg(true)} className="upimg" />
                         </div>
                         }   
 
@@ -447,11 +487,11 @@ function TableData () {
                                 <br/>
                                 <Selector isSearch={true} data={gender} selected={handleSelection} />
                             </div>
-                            <div>
+                            {/* <div>
                                 <p className='text'>Agent</p>
                                 <br/>
                                 <Selector isSearch={true} data={setAdmin} selected={handleSelection2} />
-                            </div>
+                            </div> */}
                           
                         
                             </G2C>
@@ -521,7 +561,11 @@ function TableData () {
 
 const TableContext = styled.div`
   
-
+  @media screen and (max-width:40em ) {
+        padding: 10px;
+        margin-top: 20px;
+    }
+    
 
 `
 const Client = styled.div`
@@ -530,8 +574,14 @@ const Client = styled.div`
     align-items: center;
     gap: 10px;
     padding: 30px;
-    overflow: hidden;
+    /* overflow: hidden; */
+    height: 80%;
     overflow-y: scroll;
+
+    @media screen and (max-width:40em ) {
+        margin-top: 20px;
+    }
+    
 
     .clientside1{
         border-right: 1px solid #000;
@@ -579,13 +629,35 @@ const G2C = styled.div`
 width: 100%;
      display: grid;
         gap: 20px;
-        grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+
+        @media screen and (max-width:40em ) {
+        /* width: 45%; */
+        grid-template-columns: 1fr;
+        height: 300px;
+        overflow-x: hidden;
+            ::-webkit-scrollbar{
+                display: none;
+            }
+      }
+
      
         img{
             cursor: pointer;
         }
         .forupload{
-            display: inline-flex;
+            /* display: inline-flex; */
+            height: 10px;
+            
+            @media screen and (max-width:40em ) {
+                img{
+                    width: 50% !important;
+
+                }
+        
+        }
+            
+ 
         }
         .checkcheck{
             position: relative;

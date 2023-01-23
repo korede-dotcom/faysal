@@ -46,8 +46,8 @@ function Modals({show,closeModal,children,headText,formval}) {
         <div className='content'>
           <div id="cancel">
             <div className='text'>
-            <h2>{headText}</h2>
-              <span> &#160; </span>
+              <h2>{headText}</h2>
+              {/* <span> &#160; </span> */}
             </div>
             <img src={cancel} onClick={closeModal}  />
           </div>
@@ -76,6 +76,9 @@ const ModalCont = styled.dialog`
   border-radius: 10px;
   box-shadow: 20px;
   width: 50%;
+  @media screen and (max-width: 40em) {
+      width: 100%;
+    }
 
   ::backdrop{
     opacity: .5;
@@ -89,11 +92,30 @@ const ModalCont = styled.dialog`
     display:flex;
     padding: 20px;
     /* width:50vw; */
-    @media screen and (max-width: 40em) {
-      width: 100%;
-    }
+
     flex-direction:column;
     gap: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100%;
+
+    > .forupload{
+      height: 30px;
+    }
+
+    > input{
+      font-size: 16px !important;
+    }
+
+    @media screen and (max-width: 40em) {
+          .forupload{
+          height: 30px;
+          img{
+           height: 30px;
+          }
+        }
+
+      }
 
 
     #cancel{
@@ -102,15 +124,29 @@ const ModalCont = styled.dialog`
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      @media screen and (max-width: 40em) {
+        overflow: hidden;
+        
+
+    }
 
       img{
         height: 25px;
+
+        @media screen and (max-width: 40em) {
+        }
       }
 
 
       .text{
         display: flex;
         flex-direction: column;
+        @media screen and (max-width: 40em) {
+          h2{
+            font-size: 10px !important;
+
+          }
+      }
       }
 
       h2{

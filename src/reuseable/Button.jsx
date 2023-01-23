@@ -24,11 +24,13 @@ const Buttons = styled.button`
     justify-content: center;
 
     @media screen and (max-width:40em) {
-              font-size: 10px;
+              /* font-size: 10px; */
               width: 100%;
               gap: 3px;
-              scale: 0.9;
-              display: inline-flex;
+              font-size: 8px;
+              /* scale: 0.9; */
+              
+              /* display: inline-flex; */
             }
     
 

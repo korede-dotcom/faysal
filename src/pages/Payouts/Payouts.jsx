@@ -211,6 +211,8 @@ const handleSelection = option => {
     
     },
     onSuccess:(data) =>{
+
+        setShowModal(false)
         // setinfo('category created')
 
         // if(!data.response.data.status){
@@ -332,7 +334,7 @@ function TableData () {
                                 <Selector isSearch={true} data={localgovt} selected={handleSelection2}/>
                             </div>
                             <Button 
-                            text="SUBMIT"
+                            text={agentCreationloading ? "loading...":"SUBMIT"}
                             width="40%"
                             bcg="#0A221C"
                             color="#fff"
@@ -366,7 +368,7 @@ const Client = styled.div`
     align-items: center;
     gap: 10px;
     padding: 30px;
-    overflow: hidden;
+    /* overflow: hidden; */
     overflow-y: scroll;
 
     .clientside1{

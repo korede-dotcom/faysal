@@ -51,12 +51,12 @@ function Login() {
                 
                 
             
-            localStorage.setItem("token",JSON.stringify(data.token))
-            localStorage.setItem("role",JSON.stringify(decoded.UserRoles))
+            localStorage.setItem("token",JSON.stringify(data?.token))
+            localStorage.setItem("role",JSON.stringify(decoded?.UserRoles))
+            localStorage.setItem("userId",JSON.stringify(select?.username))
             if(decoded.UserRoles === 'ADMIN'){
                 Navigate("/admin/dashboard");
             }else if(decoded.UserRoles === 'AGENT'){
-                console.log("🚀 ~ file: Login.jsx:59 ~ Login ~ decoded.UserRoles", decoded.UserRoles)
                 
                 Navigate("/dashboard");
             }
@@ -76,16 +76,7 @@ function Login() {
         
           const submitform = (e) => {
               e.preventDefault();
-            //   if(select.password === "12345" & select.username === "babs@gmail.com"){
-            //     localStorage.setItem("role",1)
-            //     Navigate("/admin/dashboard")
-            //   }
-              
-            //   if(select.password === "12345" & select.username === "tunde@gmail.com"){
-            //     localStorage.setItem("role",2)
-            //     Navigate("/dashboard")
-            //   }
-              
+          
             if(!select.password.length || !select.username.length){
                 
                 seterr("please input details")

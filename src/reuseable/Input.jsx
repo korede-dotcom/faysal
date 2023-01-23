@@ -29,6 +29,8 @@ const InputCont = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
+    width: 100%;
+    
 
     h5{
       text-transform: capitalize;
@@ -52,18 +54,18 @@ const InputCont = styled.div`
       display: none !important;
     }
     > input{
-      
+      font-size: 16px !important;
 
       @media screen and (max-width:80em) {
-        width: 90%;
+        /* width: 90%; */
       }
-      @media screen and (max-width:40em) {
-        width: 70%;
+      @media screen and (max-width:40em ) {
+        /* width: 45%; */
       }
-      @media screen and (max-width: 30em), screen and (min-width: 60em) {
+      /* @media screen and (max-width: 30em), screen and (min-width: 60em) {
         width: 100%;
       }
-      
+       */
         padding: 14px;
         border: .6px solid rgba(135, 135, 135, 1);
         border-radius: 5px;

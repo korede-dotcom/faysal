@@ -85,13 +85,23 @@ const TableContainer = styled.div`
     background-color: #fff;
     border-radius: 10px;
     /* padding: 0.3em; */
+    /* overflow: hidden; */
+
+    overflow-x: hidden;
+    
     @media screen and (max-width:40em) {
                font-size: 10px !important;
+               min-width: 250px;
+               border: 1px solid #000;
+               overflow-x: scroll;
             }
     .tableContainer{
-        overflow-x: scroll;
+        width: 100%;
+        overflow-x: hidden;
         padding: 1em;
         border-bottom: 1px solid #ddd;
+
+        
     }
     .tdetails{
         display: flex;
@@ -101,13 +111,25 @@ const TableContainer = styled.div`
         align-items: center;
 
         @media screen and (max-width:40em) {
+            
+            h3{
+                font-size: 15px;
+               display: inline-flex;
+               justify-content: flex-start;
+               width: 100%;
+               padding-block: 20px;
+               
+            }
+            > div:nth-of-type(1){
+                
+            }
                 gap: 0;
                 flex-direction: column;
+
+                font-size: 10px;
             }
 
-        h3{
-            width: 30%;
-        }
+      
         .atag{
             width: 70%;
             text-align: end;
@@ -121,6 +143,21 @@ const TableContainer = styled.div`
         width: inherit;
         border-spacing: 0px;
         width: 100%;
+        overflow-x: hidden;
+        @media screen and (max-width:40em) {
+               font-size: 10px !important;
+               min-width: 250px;
+               overflow-x: scroll;
+               height: 10px;
+            }
+   
+                /* height: 50vh;
+            @media screen and (max-width:40em) {
+               font-size: 10px !important;
+               /* border: 1px solid #000; 
+               overflow: scroll;
+            }*/
+
 
 
         
@@ -152,6 +189,9 @@ const TableContainer = styled.div`
         }
         tbody{
            min-height: 200px;
+           @media screen and (max-width:40em) {
+                     overflow-x: scroll;
+                     }
            
           
             tr:nth-of-type(even){
@@ -220,17 +260,26 @@ const TableContainer = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        @media screen and (max-width:40em) {
+              gap: 10px;
+              padding-inline: 10px;
+            }
         .pag{
             display: flex;
             gap: 30px;
             align-items: center;
             padding-block-end: 10px;
+            @media screen and (max-width:40em) {
+              gap: 5px;
+             
+            }
         }
         .pagbtn{
             display: flex;
             align-items: center;
             gap: 20px;
-            border: 1.tdetails3px solid rgb(45, 55, 72);
+            border: 1.3px solid rgb(45, 55, 72);
             padding: 5px 10px;
             border-radius: 10px;
             cursor: pointer;

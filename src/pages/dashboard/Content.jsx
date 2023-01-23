@@ -26,8 +26,10 @@ const DashboardContent = styled.div`
     align-items: flex-start;
     flex-direction: column;
     height: 100%;
+
     /* border: 1px solid red; */
     /* gap: 20px; */
+    /* gap: 90px; */
     @media screen and (max-width:40em){
             width:100%;
             place-content: center;
@@ -47,6 +49,12 @@ const Contents = styled.div`
     height: 100%;
     width: 100%;
     overflow-y: scroll;
+    @media screen and (max-width:40em) {
+      h4 {
+        display: none;
+      }
+    }
+       
   
     /* background-color:#e6e6e6; */
     ::-webkit-scrollbar{

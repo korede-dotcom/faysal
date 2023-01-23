@@ -9,6 +9,8 @@ import Search from './Search'
 // import logo from '../assets/Ellipse 1.png';
 import useAuth from '../hooks/useAuth'
 import {useLocalStorage} from '../hooks/GetRole'
+import {useMutation,useQuery} from "@tanstack/react-query"
+import {getCurrentUser} from "../services/Dashboard"
 
 
 
@@ -18,12 +20,30 @@ function Navbar({name,role,styles}) {
     // const getLocalStorage = localStorage.getItem("role")
     // const { userRole } = useAuth();
 
+    const check = JSON.parse(localStorage.getItem("role"))
+    const cUser = JSON.parse(localStorage.getItem("userId"))
+
+    const isAdmin = check === "ADMIN"
+
+
+    const { data:currentuser,isLoading:loadinguser} = useQuery({
+  
+        queryKey:['getCurrentUser'],
+        queryFn: () => getCurrentUser(cUser),
+        // onError: (err) => {
+        //   setMessage(err?.response?.data?.detail || err.message);
+        //   setOpen(true);
+        // },
+        // enabled: Boolean(agentId),
+      });
+    console.log("🚀 ~ file: Profile.jsx:49 ~ Profile ~ currentuser", currentuser)
+
 
   return (
         <div className="nav"> 
         <div className='navtitle'>
         <img src={avatar} className="avi" />   
-        <p>Olumide | <span>{getLocalStorage === "AGENT" ? 'Agent' : (getLocalStorage === "ADMIN") ? 'Admin' : (getLocalStorage === 3) ? 'Customer' : '' }</span></p>
+        <p>{currentuser?.userName} | <span>{getLocalStorage === "AGENT" ? 'Agent' : (getLocalStorage === "ADMIN") ? 'Admin' : (getLocalStorage === 3) ? 'Customer' : '' }</span></p>
         
             
 

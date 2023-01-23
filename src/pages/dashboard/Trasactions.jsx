@@ -18,8 +18,9 @@ function Trasactions({data}) {
             return  <Cont>
             <img src={trnx}/>
             <div>
-              <p>Agent Bola Animashaun</p>
-              <small>{d.time}</small>
+              <p>{d.name}</p>
+              <small>{d.date} | {d.type}</small>
+              <p>#{d.amount}</p>
             </div>
         </Cont>
         })}

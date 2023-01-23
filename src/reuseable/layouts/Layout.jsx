@@ -13,7 +13,7 @@ const Flex = styled.div`
     display: flex;
     height: 100Vh;
     width: 100vw;
-    overflow: hidden;
+    /* overflow: hidden; */
 `
 
 export default Layout

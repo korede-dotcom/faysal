@@ -55,12 +55,12 @@ export const links = [
         img: profile,
         active:profileA
     },
-    {
-        name: 'Payouts',
-        url: '/payouts',
-        img: payment,
-        active:paymentA
-    },
+    // {
+    //     name: 'Payouts',
+    //     url: '/payouts',
+    //     img: payment,
+    //     active:paymentA
+    // },
     {
         name: 'Logout',
         url: '/',
@@ -113,12 +113,12 @@ export const linkAdmin = [
         img: profile,
         active:profileA
     },
-    {
-        name: 'Payouts',
-        url: '/admin/payouts',
-        img: payment,
-        active:paymentA
-    },
+    // {
+    //     name: 'Payouts',
+    //     url: '/admin/payouts',
+    //     img: payment,
+    //     active:paymentA
+    // },
     {
         name: 'Logout',
         url: '/',

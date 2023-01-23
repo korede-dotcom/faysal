@@ -90,9 +90,8 @@ const formattedDate = currentDate.toISOString().slice(0, 10);
 
 const [superAgent,setSuperAgent] = useState(
 
-    {
-
-    
+    {    
+        user_id:userId,
         userName:"",
         password:"",
         name:"",
@@ -100,7 +99,6 @@ const [superAgent,setSuperAgent] = useState(
         gender:"",
         address:"",
         phoneNumber:"",
-        user_id:userId,
         agentLocation:{
             id:{
                 
@@ -112,6 +110,12 @@ const [superAgent,setSuperAgent] = useState(
 )
 console.log(superAgent)
 
+const { mutate, isLoading:is_loading,isError} = useMutation({
+    mutationFn: createUser,
+    onSuccess : (d) => {
+        setShowModal(false)
+    }
+});
 
 const modalBtn = () => {
     setShowModal(true)
@@ -125,8 +129,10 @@ const modalclient = () => {
 const handleCreateAgentManager = (e) => {
     e.preventDefault();
     // e.target.parentElement.close()
-    setShowModal(false)
     mutate(superAgent)
+    // if(!is_loading){
+    //     setShowModal(false)
+    // }
     
 }
 const handleCreateAgent = (e) => {
@@ -194,6 +200,7 @@ const handleSelection = option => {
     
 
   };
+
   const handleSelection2 = option => {
     setSelectedOption(option);
     // setfilterby2(option?.value)
@@ -247,9 +254,7 @@ const handleSelection = option => {
         }
     })
 
-    const { mutate, isLoading:is_loading,isError} = useMutation({
-        mutationFn: createUser,
-    });
+  
 
     const { data:adminUserList,isLoading:loadingadminUserList  } = useQuery({
   
@@ -275,7 +280,7 @@ function TableHead () {
                 </td>
                 <td> 
                     <span>
-                        <p>AGENT ID</p>
+                        <p>NAME</p>
                         <img src={sorting}/>
                     </span>
                 </td>
@@ -441,13 +446,13 @@ function TableData () {
                             <div>
                                 <p className='text'>Gender</p>
                                 <br/>
-                                <Selector isSearch={true} data={[{value:'male',label:'male'},{value:'female',label:'female'}]} selected={handleSelection2} />
+                                <Selector isSearch={true} data={[{value:'Male',label:'Male'},{value:'Female',label:'Female'}]} selected={handleSelection2} />
                             </div>
                             <Input type="number" textStyle="bold" text="phone Number" name="phoneNumber" change={handleOnChange}/>
                             <div>
                                 <p className='text'>User Type</p>
                                 <br/>
-                                <Selector isSearch={true} data={ [{value:'Agent',label:'Agent'},{value:'Admin',label:'Admin'}]} selected={handleSelection3} />
+                                <Selector isSearch={true} data={ [{value:'AGENT',label:'AGENT'},{value:'ADMIN',label:'ADMIN'}]} selected={handleSelection3} />
                             </div>
                            
                             {/* <SimpleSelect text="State" name="state" change={teest} /> */}
@@ -457,7 +462,7 @@ function TableData () {
                         
                             </G2C>
                             <Button 
-                            text="SUBMIT"
+                            text={is_loading ? "Loading..." :"SUBMIT"}
                             width="50%"
                             color="#fff"
                             bcg="#0A221C"
@@ -531,8 +536,25 @@ const Client = styled.div`
     align-items: center;
     gap: 10px;
     padding: 30px;
-    overflow: hidden;
+    /* overflow: hidden; */
     overflow-y: scroll;
+
+    @media screen and (max-width:40em){
+        background: #fff;
+        z-index: 1000;
+        top:2% !important;
+        /* height: 30%;
+        margin-top: 90px; */
+        /* padding-top: 40%; */
+        /* padding: 10px; */
+        /* padding-bottom: 20px; */
+        /* height: 20% !important;
+        border: 1px solid red;
+        display: inline-flex;
+        align-items: flex-end; */
+        top: 0;
+    }
+
 
     .clientside1{
         border-right: 1px solid #000;
@@ -581,6 +603,16 @@ width: 100%;
      display: grid;
         gap: 20px;
         grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+
+        @media screen and (max-width:40em ) {
+        /* width: 45%; */
+        grid-template-columns: 1fr;
+        height: 300px;
+        overflow-x: hidden;
+            ::-webkit-scrollbar{
+                display: none;
+            }
+      }
      
         img{
             cursor: pointer;

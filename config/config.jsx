@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://89.38.135.41:7000/'
+export const BASE_URL = 'http://167.71.28.48:7000/'
 
 export const Colors = {
     darkgreen:'#0A221C',

@@ -18,6 +18,7 @@ const Searchbar = styled.div`
     align-items: center;
     width: 100%;
     /* justify-content: space-between; */
+   
     
     > input{
         /* padding: 0.1rem; */
@@ -27,10 +28,17 @@ const Searchbar = styled.div`
         padding: 8px;
         outline: none;
         padding-left: 35px;
+        font-size: 16px;
+        @media screen and (max-width:40em) {
+                     padding-inline-start: 25px;
+            }
     }
     > input::placeholder{
         text-align: center;
         padding-left: 20px;
+        @media screen and (max-width:40em) {
+            padding-left: 0px;
+            }
       
     }
     > img{
