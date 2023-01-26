@@ -84,7 +84,12 @@ const ProfileCont = styled.div`
     display: flex;
     flex-direction: column;
     padding: 30px;
-  
+    @media screen and (max-width:40em ) {
+        flex-direction: column;
+        font-size: 10px !important;
+        overflow: scroll;
+        /* margin-top: -30px; */
+      }
     
     .cont{
         gap: 40px;
@@ -103,9 +108,11 @@ const ProfileCont = styled.div`
         padding: 20px;
         align-items: center;
         gap: 30px;
+        
 
         @media screen and (max-width:40em ) {
         flex-direction: column;
+        font-size: 10px;
       }
     }
 
@@ -135,6 +142,12 @@ width: 100%;
         @media screen and (max-width:40em ) {
         /* width: 45%; */
         grid-template-columns: 1fr;
+        gap: 5px !important;
+        
+        input{
+            font-size: 10px !important;
+
+        }
       }
 `
 

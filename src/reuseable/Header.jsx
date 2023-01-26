@@ -29,11 +29,11 @@ function Header({text}) {
     <Head>
         <p> Faysal / {window.location.pathname.toString().split('/')}</p>
         <img src={logo} className="headlogo"/>
-        {window.location.pathname === '/dashboard' && 
+        {/* {window.location.pathname === '/dashboard' && 
         <Search placeholder="Search" inputWidth="90%" inputBcg="#E7E7E7" /> 
-        } 
+        }  */}
         <div className='user'>
-            <img src={bell} className="usericons"/>
+            {/* <img src={bell} className="usericons"/> */}
             <img src={timer} className="usericons" onClick={() => window.location.assign(window.location.pathname)}/>
             <img src={!show ? sidebar : cancel} className="usericons menu" onClick={handleBurger}/>
             {/* <img src={line} className="usericons"/> */}
@@ -89,7 +89,7 @@ const Head = styled.header`
         display: none;
     }
     @media screen and (max-width:40em){
-        height: 10%;
+        /* height: 10%; */
      p{
         display: none;
      }

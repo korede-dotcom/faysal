@@ -35,12 +35,13 @@ align-items: center;
 border-top-left-radius: 20px;
 padding: 1.8em;
 font-weight: 100;
+z-index: 10000;
   
 }
 
 @media screen and (max-width: 40em) {
     .nav{
-        padding-top: 35%;
+        padding-top: 30%;
         width: 75vw !important;
     }
 }

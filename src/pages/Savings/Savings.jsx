@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Layout from '../../reuseable/layouts/Layout'
 import Navbar from '../../reuseable/Navbar'
 import Table from '../../reuseable/table/Table'
@@ -20,32 +20,32 @@ import Switch from '../../reuseable/Switch'
 import card from '../../assets/card1.svg'
 import Selector from '../../reuseable/Selector'
 import { useMutation,useQuery } from '@tanstack/react-query'
-import {createSavings,getAdminSavings,agentSavingsList,getAdminCustomersList,getAgentCustomersList,depositFunds} from "../../services/Dashboard"
+import {createSavings,getAdminSavings,agentSavingsList,getAdminCustomersList,getAgentCustomersList,depositFunds, withdrawFunds} from "../../services/Dashboard"
+import { useNavigate } from 'react-router-dom'
 
 function Savings() {
     const [selectedOption, setSelectedOption] = useState(null);
-  const [first, setfirst] = useState("")
 const [isActive, setisActive] = useState(true)
 const [b2isActive, b2setisActive] = useState(false)
 const [showModal, setShowModal] = useState(false)
 const [showModal2, setShowModal2] = useState(false)
-const [createAgent,setCreateAgent] = useState(false)
-const [createAgentM,setCreateAgentM] = useState(false)
-const [showImg,setshowImg] = useState(false)
-const [showclient,setShowClient] = useState(false)
+const [showModal3, setShowModal3] = useState(false)
 const [showInput,setshowInput] = useState(false)
-const [removal,setremoval] = useState(false)
 const [savingsId, setsavingsId] = useState(false)
 const [balance, setbalance] = useState(false)
 const [tenure, settenure] = useState(false)
 const [customer, setcustomer] = useState(false)
-const [custom, setcustom] = useState(false)
 const [cdate, setdate] = useState(false)
-const [enddate, setEnddate] = useState(false)
 const [search, setSearch] = useState('')
 const [currentSavingns, setCurrentSavings] = useState('')
 const [amount,setAmount] = useState('')
 const [id,setId] = useState('')
+const [Aamount,setAamount] = useState('')
+const [err,seterr] = useState('')
+const [forPostId,setforPostId] = useState(false)
+const [forBalanceId,setforBalanceId] = useState(false)
+const [isTwo, setIstwo] = useState(false)
+const [Load, setLoad] = useState(false)
 
 console.log(cdate)
 
@@ -54,18 +54,8 @@ console.log("🚀 ~ file: Savings.jsx:50 ~ Savings ~ check", check)
 
 const isAdmin = check === "ADMIN"
 
-// {
-//     "savingsId":"SVN3438954",
-//     "balance": 2300000,
-    
-//     "tenure":"30",
-    
-//     "customer": {
-    
-//         "id": 2
-//     }
-    
-//     }
+
+const Navigate = useNavigate();
 
 const options = [
   { value: 'korede', label: 'korede' },
@@ -87,9 +77,7 @@ const handleOnChange = (e) => {
     const { value, name } = e.target
    
       console.log(name,value)
-    //   setCreateAgentManager((prev) => {
-    //       return {...prev, [name]:value}
-    //    })
+ 
       
 }
 
@@ -228,6 +216,7 @@ const sortedAgent = agentsavinglist?.content?.map(d => {
         tenure:d.tenure,
         startDate:d.startDate,
         endDate:d.endDate,
+        status:d.status
         // phoneNumber:d.cu
     }
 })
@@ -269,31 +258,42 @@ const { mutate, isLoading:savingCreationloading,data:savingCreated,isError } = u
 
     onError: (err) => {
      console.log(err)
-  
-    
     },
     onSuccess:(data) =>{
-        // setinfo('category created')
-
-        // if(!data.response.data.status){
-        //     setTimeout(() => {
-        //         setinfo('unable to create category')
-        //     }, 1000);
-        //     setinfo('')
-        // }
-        // setTimeout(() => {
-        //     setShowModal(false)
-        //     setinfo('')
-        // }, 2000);
         setShowModal(false)
         window.location.reload()
         refetch()
     }
   });
 
-const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation({
-    queryKey:['id','amount',id,amount],
-    mutationFn:  depositFunds(id,amount),
+
+
+  const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation({
+      queryKey:["deposit"],
+      mutationFn:  depositFunds,
+    //   queryFn: () => depositFunds(forPostId,forBalanceId),
+  
+      onError: (err) => {
+       console.log(err)
+       
+      },
+      onSuccess:() =>{
+          // setinfo('category created')
+          window.location.reload()
+      }
+  });
+  
+  const depositFunc = (e) => {
+    e.preventDefault()
+    deposit({id:forPostId,amount:amount})
+    
+    
+}
+
+
+const { mutate:withdraw,isSuccess,onSettled } = useMutation({
+    queryKey:["withdraw"],
+    mutationFn:  withdrawFunds,
     // queryFn: () => depositFunds(id,amount),
 
     onError: (err) => {
@@ -301,33 +301,29 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
   
     
     },
-    onSuccess:(data) =>{
+    onSuccess:() =>{
         // setinfo('category created')
- 
-        // if(!data.response.data.status){
-        //     setTimeout(() => {
-        //         setinfo('unable to create category')
-        //     }, 1000);
-        //     setinfo('')
-        // }
-        // setTimeout(() => {
-        //     setShowModal(false)
-        //     setinfo('')
-        // }, 2000);
-        refetch()
+        window.location.reload()
+      
+    },
+    onSettled:() => {
+        window.location.reload()
     }
   });
 
-  const depositFunc = () => {
-    deposit()
+const withdrawFund = (e) => {
+    e.preventDefault()
+      withdraw({id:forPostId,amount:amount})
 }
+
+
 
   const handleSavings = (e) => {
     e.preventDefault()
     mutate(
         {
-            savingsId:savingsId,
-            balance: balance,
+            // savingsId:savingsId,
+            // balance: balance,
             
             tenure:tenure,
             
@@ -381,7 +377,7 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
     dataComponent={<TableData data={isAdmin ? sorted : sortedAgent}/>}
     dataHead={<TableHead/>}
 >
-        <div>
+<div >
     <div className='tableContainer'>
 <div className='tdetails'>
     <h3>Savings</h3>
@@ -418,13 +414,13 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
         {showModal &&
         (<Modal show={showModal} closeModal={() => setShowModal(false)} headText="Savings Details" formval={handleCreateAgentManager}>
              <G2C>
-            <Input type="text" textStyle="bold" text="savings ID" name="savingsId" change={(e) => setsavingsId(e.target.value)} />
+            {/* <Input type="text" textStyle="bold" text="savings ID" name="savingsId" change={(e) => setsavingsId(e.target.value)} /> */}
             {/* <div>
                                 <p className='text'>savings ID</p>
                                 <br/>
                                 <Selector isSearch={true} data={ agentSavingsList} selected={handleSelection3}/>
             </div> */}
-            <Input type="number" textStyle="bold" text="Balance" name="balance"  change={(e) => setbalance(e.target.value)} />
+            {/* <Input type="number" textStyle="bold" text="Balance" name="balance"  change={(e) => setbalance(e.target.value)} /> */}
             <Input type="tenure" textStyle="bold" text="Tenure" name="tenure"  change={(e) => settenure(e.target.value)} />
             {/* <Input type="text" textStyle="bold" text="savings type"/> */}
             {/* <Input type="date" textStyle="bold" text="Start date"  change={(e) => setdate(e.target.value)} />
@@ -456,13 +452,70 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
                               <Client>
                                 <div className='clientside1'>
                                 <div className='details'>
+                                {err && <p style={{color:"red"}}>{err}</p> }
                                 <h4 style={{borderBottom:'1 solid #000'}}>Savings Details</h4>
                                 <p>SAVINGS ID: {currentSavingns[0]?.savingsId} </p>
                                 <p>BALANCE: {currentSavingns[0]?.balance} </p>
                                 <p>TENURE : {currentSavingns[0]?.tenure}</p>
+                                <p>STATUS : {currentSavingns[0]?.status}</p>
                                 
                                  <Input type="text" textStyle="bold" name="region" change={(e) => setAmount(e.target.value)} placeholder="Enter Amount"/> 
-                                <p onClick={depositFunc} className="btn">{showInput ? "SUBMIT" : "DEPOSIT"}</p>
+                                <p style={{cursor:"pointer"}} onClick={() =>{
+                                    seterr("please input Amount")
+                                    setTimeout(() => {
+                                        seterr(" ")
+                                    },800)
+                                    if(amount.length > 1){
+                                        setShowModal2(false)
+                                        setShowModal3(true)
+                                        setforPostId(currentSavingns[0]?.id)
+                                     
+
+                                    }
+                                    }} className="btn">{showInput ? "SUBMIT" : "DEPOSIT"}</p>
+                                    
+                                    <Button 
+                                        text={ "WITHDRAW" }
+                                        width="100%"
+                                        bcg="green"
+                                        color="#fff"
+                                        display="inline-flex"
+                                        clickEvent={ () => {
+                                            if(currentSavingns[0]?.status === "completed"){
+                                                seterr("please input Amount")
+                                                setTimeout(() => {
+                                                    seterr(" ")
+                                                },800)
+                                                if(amount.length > 1){
+                                                    setIstwo(true)
+                                                    setShowModal2(false)
+                                                    setShowModal3(true)
+                                                    setforPostId(currentSavingns[0]?.id)
+                                                }
+
+                                            } 
+                                        }   
+                                        }
+                                        // clickEvent={currentSavingns[0]?.status === "completed" ? withdrawFund : ""}
+                                        disabled={currentSavingns[0]?.status === "completed" }
+                                        opactiy={currentSavingns[0]?.status === "completed" ? "1":"0.4"}
+                                        />
+
+                                    {/* { currentSavingns[0]?.status === "completed" &&
+                                <p style={{cursor:"pointer"}} onClick={() =>{
+                                    seterr("please input Amount")
+                                    setTimeout(() => {
+                                        seterr(" ")
+                                    },800)
+                                    if(amount.length > 1){
+                                        setShowModal2(false)
+                                        setShowModal3(true)
+                                        setIstwo(true)
+                                        setforPostId(currentSavingns[0]?.id)
+
+                                    }
+                                    }} className="btn">{withdrawFund ? "SUBMIT" : "DEPOSIT"}</p>
+                                } */}
 
                                 </div>
 
@@ -471,16 +524,7 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
                           
                                 {/* <img src={card} height="100px"/>  */}
                                 <div className='details'>
-                                {/* <p><small>Name</small>:  Korede</p>
-                                <p><small>PhonNumber</small> : 0808888888</p>
-                                <p><small>Email</small> : korede@live.com</p>
-                                <p><small>Address</small> : 11 lagos island</p>
-                                <p><small>Total Savings</small> : #4000 </p> */}
-                                        
-                                     
-                                
-                        
-
+   
                                 </div>
 
                                 </div>
@@ -490,6 +534,33 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
                           
                               {/* </G2C> */}
                          </Modal>)
+                }
+                       {showModal3 &&
+                        (<Modal show={isActive} closeModal={() => setShowModal3(false)} headText="Savings Information"  formval={(e) => e.preventDefault()}> 
+                        {<p>Do you want to Proceed with the {isTwo ? "Withdraw ?" :"Deposit ?"}</p>}
+                        <div className='btnflex'>
+                                  <Button 
+                                    text="Yes"
+                                    width="50%"
+                                    bcg="#0A221C"
+                                    color="#fff"
+                                    display="inline-flex"
+                                    clickEvent={isTwo ? withdrawFund : depositFunc}
+                                    />
+                                
+
+                                  <Button 
+                                    text="No"
+                                    width="50%"
+                                    bcg="red"
+                                    color="#fff"
+                                    display="inline-flex"
+                                    clickEvent={()=> window.location.reload()}
+                                    />
+                             
+                        </div>
+                            </Modal>
+                        )
                 }
 
 
@@ -506,7 +577,7 @@ const { mutate:deposit, isLoading:depositloading, data:deposited } = useMutation
   
 const TableContext = styled.div`
   
-
+    
 
 `
 const G2C = styled.div`
@@ -524,6 +595,7 @@ width: 100%;
                 display: none;
             }
       }
+      
 `
 
 const Client = styled.div`
@@ -532,6 +604,8 @@ const Client = styled.div`
     align-items: center;
     gap: 10px;
     padding: 30px;
+
+  
 
     .clientside1{
        
@@ -555,6 +629,8 @@ const Client = styled.div`
             display: flex;
             flex-direction: column;
             gap: 20px;
+
+            
 
         }
         
@@ -596,6 +672,10 @@ const Client = styled.div`
                 border-bottom: 1px solid #000;
                 padding-block: 10px;
             }
+    }
+    .btnflex{
+        display: flex;
+        gap: 10px;
     }
    
 `

@@ -214,7 +214,7 @@ const handleSelection = option => {
 
         setShowModal(false)
         // setinfo('category created')
-
+        window.location.reload()
         // if(!data.response.data.status){
         //     setTimeout(() => {
         //         setinfo('unable to create category')

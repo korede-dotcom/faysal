@@ -53,6 +53,9 @@ const Contents = styled.div`
       h4 {
         display: none;
       }
+      padding-block: 50px;
+
+
     }
        
   
@@ -114,7 +117,7 @@ const Contents = styled.div`
         gap: 15px;
         grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
         @media screen and (max-width:40em){
-           
+           margin-top: 15px;
         }
 
         .line{

@@ -114,6 +114,7 @@ const { mutate, isLoading:is_loading,isError} = useMutation({
     mutationFn: createUser,
     onSuccess : (d) => {
         setShowModal(false)
+        window.location.reload()
     }
 });
 

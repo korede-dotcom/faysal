@@ -87,15 +87,15 @@ const baseurl = BASE_URL
     return data;
   };
 
-  export const withdrawFunds = async (amount) => {
+  export const withdrawFunds = async (query) => {
     const { data } = await Axios.post(
-      `${baseurl}withdraw-money/1?amount=${amount}`,
+      `${baseurl}withdraw-money/${query.id}?amount=${query.amount}`,
     );
     return data;
   };
-  export const depositFunds = async (id,amount) => {
+  export const depositFunds = async (query) => {
     const { data } = await Axios.post(
-      `${baseurl}deposit-money/${id}?amount=${amount}`,
+      `${baseurl}deposit-money/${query.id}?amount=${query.amount}`,
     );
     return data;
 

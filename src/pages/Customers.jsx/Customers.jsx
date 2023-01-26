@@ -57,6 +57,7 @@ const [address,setaddress] = useState("")
 const [role,setrole] = useState("")
 const [agent_id,setagent_id] = useState("")
 const [search,setSearch] = useState("")
+const [USER,setUSER] = useState("")
 
 
 const capture = React.useCallback(
@@ -112,7 +113,7 @@ useEffect(()=> {
 const { mutate, isLoading:is_loading,isError} = useMutation({
     mutationFn: createCustomer,
     onSuccess: (data) => {
-     
+        window.location.reload()
     // localStorage.setItem(JSON.stringify(data.tokem))
     // Navigate("/dashboard");
     },
@@ -157,10 +158,7 @@ const modalBtn = () => {
     setShowModal(true)
     
 }
-const modalclient = () => {
-    setShowModal2(true)
-    
-}
+
 
 const handleCreateAgentManager = (e) => {
     e.preventDefault();
@@ -352,8 +350,9 @@ function TableHead () {
     )
 }
 
-const sorts = customerlist?.content?.map(d => {
+const sorts = AgentCustomersList?.content?.map(d => {
     return {
+        id:d.id,
         name:d.name,
         phoneNumber:d.phoneNumber,
         email:d.email,
@@ -368,6 +367,12 @@ const sorts = customerlist?.content?.map(d => {
     }
 })
 
+const modalclient = (id) => {
+    const USER = sorts?.find(d => d?.id === id)
+    setUSER(USER)
+    setShowModal2(true)
+}
+
 function TableData () {
     return (
         sorts?.filter(val => {
@@ -376,7 +381,7 @@ function TableData () {
                 return val
             }
         })?.map((d,index) => (
-            <tr key={d?.id} onClick={modalclient}>
+            <tr key={d?.id} onClick={() => modalclient(d.id)}>
                 <td>{index + 1}</td>
                 <td>{d?.name}</td>
                 <td>{d?.address}</td>
@@ -398,7 +403,7 @@ function TableData () {
     dataComponent={<TableData />}
     dataHead={<TableHead/>} 
 >
-        <div>
+        <div >
     <div className='tableContainer'>
 <div className='tdetails'>
     <h3>Customers</h3>
@@ -507,16 +512,16 @@ function TableData () {
                         }
 
                 {showModal2 &&
-                        (<Modal show={showModal2} closeModal={() => setShowModal2(false)} headText="Customer Deposit"  formval={(e) => e.preventDefault()}> 
+                        (<Modal show={showModal2} closeModal={() => setShowModal2(false)} headText="Customer Info"  formval={(e) => e.preventDefault()}> 
                               {/* <G2C> */}
                               <Client>
                                 <div className='clientside1'>
-                                <img src={card} height="100px"/> 
+                                {/* <img src={card} height="100px"/>  */}
                                 <div className='details'>
-                                <p><small>Name</small>:  Korede</p>
-                                <p><small>PhonNumber</small> : 0808888888</p>
-                                <p><small>Email</small> : korede@live.com</p>
-                                <p><small>Address</small> : 11 lagos island</p>
+                                <p><small>Name</small>: {USER.name}</p>
+                                <p><small>PhonNumber</small> : {USER.phoneNumber}</p>
+                                <p><small>Email</small> : {USER.email}</p>
+                                <p><small>Address</small> : {USER.address}</p>
                                 
 
                                 </div>
@@ -524,20 +529,20 @@ function TableData () {
                                 </div>
                                 <div className='clientside2'>
 
-                                <div className='amount'>
+                                {/* <div className='amount'>
                                     <p>Total Savings</p>
                                     <h1>#4000</h1>
                                 </div>
-                               {showInput && <Input type="text" textStyle="bold" name="region" change={handleOnChange} placeholder="Enter Amount"/> }
+                               {showInput && <Input type="text" textStyle="bold" name="region" change={handleOnChange} placeholder="Enter Amount"/> } */}
 
-                                <Button 
+                                {/* <Button 
                                 text={showInput ? "SUBMIT" : "DEPOSIT"}
                                 width="50%"
                                 color="#fff"
                                 bcg="#0A221C"
                                 display="inline-flex"
                                 clickEvent={() => setshowInput(true)}
-                            />
+                            /> */}
                                 </div>
                                 
 
@@ -580,11 +585,12 @@ const Client = styled.div`
 
     @media screen and (max-width:40em ) {
         margin-top: 20px;
+        flex-direction: column;
     }
     
 
     .clientside1{
-        border-right: 1px solid #000;
+        /* border-right: 1px solid #000; */
         /* padding-inline-end: 30px; */
         display: inline-flex;
         justify-content: start;
@@ -592,6 +598,11 @@ const Client = styled.div`
         width: 50%;
         flex-direction: column;
         gap: 10px;
+        @media screen and (max-width:40em ) {
+            margin-top: 20px;
+            flex-direction: column;
+            border: none;
+        }
         .details{
             display: flex;
             flex-direction: column;

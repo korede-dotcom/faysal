@@ -173,18 +173,18 @@ const sortTranx = tranx?.content?.map(d => {
                     
             </div> :
              <div className='gridcard'>
-             <Card name="Total Client Registered" amount={agenttotalcustomers} amountText="Total Customer Count" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+             <Card name="Total Client Registered" amount={agenttotalcustomers} amountText="Total Customer" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
              <Card name="Total Client Registered" amount="-" amountText="Total Payout" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
              {/* <Card name="Total Client Registered" amount="500" amountText="Total " cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/> */}
-             <Card name="Total Client Registered" amount={agentTotalDeposit}  amountText="Total Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
+             <Card name="Total Client Registered" amount={agentTotalDeposit}  amountText="Today Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
          
             </div>
         }
                 <h4>Today Totals</h4>
             <div className='gridcard'>
-                <Button text="register Client" width="100%" bcg="#fff" icon={card5} ih="35px"  clickEvent={() => navigate('/customers')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
-                <Button text="Activity Sumary" width="100%" bcg="#fff" icon={card2} ih="35px" color="#000" clickEvent={() => navigate('/savings')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"  />
-                <Button text="Deposit Funds" width="100%" bcg="#fff" icon={card1} ih="30px" clickEvent={() => navigate('/remitance')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+                <Button text="register Customer" width="100%" bcg="#fff" icon={card5} ih="35px"  clickEvent={() => navigate('/customers')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+                {/* <Button text="Activity Sumary" width="100%" bcg="#fff" icon={card2} ih="35px" color="#000" clickEvent={() => navigate('/savings')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"  /> */}
+                <Button text="Remitance" width="100%" bcg="#fff" icon={card1} ih="30px" clickEvent={() => navigate('/remitance')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
                 <Button text="View All Savings" width="100%" bcg="#fff" icon={card4} ih="30px" color="#000"clickEvent={() => navigate('/savings')} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
                 {/* <Card name="Total Client Registered" amount="500" amountText="Total PayIn" cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
                 <Card name="Total Client Registered" amount="500" amountText="Total Amount" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>

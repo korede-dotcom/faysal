@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Layout from '../../reuseable/layouts/Layout'
 import Navbar from '../../reuseable/Navbar'
 import Table from '../../reuseable/table/Table'
@@ -38,7 +38,6 @@ const [agentId,setagentId] = useState(null)
 
 const check = JSON.parse(localStorage.getItem("role"))
 const cUser = JSON.parse(localStorage.getItem("userId"))
-
 const isAdmin = check === "ADMIN"
 
 const b1Click = (e) =>{
@@ -106,7 +105,7 @@ const { mutate, isLoading:loadingCreateRemitance,data:remitanceCreated,isError }
     },
     onSuccess:(data) =>{
         // setinfo('category created')
-
+        window.location.reload()
         // if(!data.response.data.status){
         //     setTimeout(() => {
         //         setinfo('unable to create category')
@@ -135,7 +134,7 @@ const { data:agentremitancelist,isLoading:loadingagentremitancelist} = useQuery(
   });
 const { data:user,isLoading:loadingUser} = useQuery({
   
-    queryKey:['getAgentRemitance'],
+    queryKey:['getCurrentUser'],
     queryFn: () => getCurrentUser(cUser),
     // onError: (err) => {
     //   setMessage(err?.response?.data?.detail || err.message);
@@ -204,8 +203,9 @@ const { data:user,isLoading:loadingUser} = useQuery({
     
     },
     onSuccess:(data) =>{
+        window.location.reload()
         // setinfo('category created')
-
+        setShowModal(false)
         // if(!data.response.data.status){
         //     setTimeout(() => {
         //         setinfo('unable to create category')
@@ -226,11 +226,12 @@ const handleRemitance = (e) => {
         amount: amount,
         paymentReferenceNumber: paymentReferenceNumber,
             agent: {
-            id:user.id
+                 "id":user?.id
             }
         })
 
 }
+
 function TableHead () {
     return (
         <thead>
@@ -304,7 +305,7 @@ function TableData ({data}) {
     dataComponent={<TableData data={isAdmin ? adminremitanceList : agentremitanceList}/>}  
     dataHead={<TableHead/>}
 >
-        <div>
+<div>
     <div className='tableContainer'>
 <div className='tdetails'>
     <h3>Remitances</h3>
@@ -333,18 +334,12 @@ function TableData ({data}) {
           
            <Client>
                                 <div className='clientside1'>
-                                <div className='details'>
-                                <p>Total Amount Collected Today</p>
-                              
-                                <h2># 10,200,022</h2>
-                                
-                                
-
-                                </div>
-
+                                    <div className='details'>
+                                        <p>Total Amount Collected Today</p>
+                                        <h2># 10,200,022</h2>
+                                    </div>
                                 </div>
                                 <div className='clientside2'>
-
                                 <div className='amount'>
                                     <p>Deposit Today</p>
                                 
@@ -420,10 +415,12 @@ const Client = styled.div`
         width: 50%;
         flex-direction: column;
         gap: 10px;
+        display: none;
         .details{
             display: flex;
             flex-direction: column;
             gap: 20px;
+            display: none;
         }
         @media screen and (max-width:40em){
             border-right: none;

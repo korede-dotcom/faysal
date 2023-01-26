@@ -24,7 +24,7 @@ Axios.interceptors.response.use(
   },
   function (error) {
     if (401 === error?.response?.status) {
-      // window.location = "/";
+      window.location = "/";
     } else if ("Request failed with status code 500" === error.message || error?.response?.status >= 500) {
       return Promise.reject({
         ...error,

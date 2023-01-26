@@ -38,6 +38,7 @@ const Searchbar = styled.div`
         padding-left: 20px;
         @media screen and (max-width:40em) {
             padding-left: 0px;
+            font-size: 10px;
             }
       
     }

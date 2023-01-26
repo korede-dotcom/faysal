@@ -88,18 +88,41 @@ const TableContainer = styled.div`
     /* overflow: hidden; */
 
     overflow-x: hidden;
+
+
+
+    ::-webkit-scrollbar{
+        display: none;
+    }
     
     @media screen and (max-width:40em) {
                font-size: 10px !important;
-               min-width: 250px;
+               /* min-width: 250px; */
                border: 1px solid #000;
                overflow-x: scroll;
+               margin-top: 60px;
+               ::-webkit-scrollbar{
+        display: none;
+    }
+    
             }
     .tableContainer{
         width: 100%;
         overflow-x: hidden;
         padding: 1em;
         border-bottom: 1px solid #ddd;
+
+        @media screen and (max-width:40em) {
+              gap: 10px;
+              padding-inline: 10px;
+              position: absolute;
+              display: inline-flex;
+              justify-content: center;
+              /* align-items: center; */
+              width: 100vw;
+              z-index: 1;
+              top:10px;
+            }
 
         
     }
@@ -149,6 +172,7 @@ const TableContainer = styled.div`
                min-width: 250px;
                overflow-x: scroll;
                height: 10px;
+               position: relative;
             }
    
                 /* height: 50vh;
@@ -191,6 +215,9 @@ const TableContainer = styled.div`
            min-height: 200px;
            @media screen and (max-width:40em) {
                      overflow-x: scroll;
+            
+                     width: 100vw;
+      
                      }
            
           
@@ -264,6 +291,12 @@ const TableContainer = styled.div`
         @media screen and (max-width:40em) {
               gap: 10px;
               padding-inline: 10px;
+              position: absolute;
+              display: inline-flex;
+              justify-content: center;
+              align-items: center;
+              width: 100vw;
+              bottom: 20px;
             }
         .pag{
             display: flex;

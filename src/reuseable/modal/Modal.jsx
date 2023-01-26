@@ -99,6 +99,13 @@ const ModalCont = styled.dialog`
     overflow-y: scroll;
     height: 100%;
 
+   > .btnflex{
+        display: flex;
+        gap: 10px;
+
+       
+    }
+
     > .forupload{
       height: 30px;
     }

@@ -109,6 +109,7 @@ const { mutate, isLoading:is_loading,isError} = useMutation({
      setShowModal(false)
     // localStorage.setItem(JSON.stringify(data.tokem))
     // Navigate("/dashboard");
+    window.location.reload()
     },
     onError: (data) =>{
         console.log(data)

@@ -48,7 +48,7 @@ const Contents = styled.div`
     overflow: hidden;
     @media screen and (max-width:40em ) {
         padding: 10px;
-        margin-top: 20%;
+        margin-top: 10%;
         /* overflow: hidden; */
     }
     

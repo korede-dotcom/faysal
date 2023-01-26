@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 
-function Button({text,bcg,color,icon,clickEvent,width,align,display,ih,iw,bxs}) {
+function Button({text,bcg,color,icon,clickEvent,width,align,display,ih,iw,bxs,disabled,opactiy}) {
   return (
-    <Buttons style={{background:bcg,color:color,width:width,display:`${display}`,boxShadow:`${bxs}`}} onClick={clickEvent}>
+    <Buttons style={{background:bcg,color:color,width:width,display:`${display}`,boxShadow:`${bxs}`,opacity:`${opactiy}`}} onClick={clickEvent} disabled={disabled}>
        {icon && <img src={icon} width={iw} height={ih}/>}
         <p style={{textAlign:`${align}`}}>{text}</p>
     </Buttons>
