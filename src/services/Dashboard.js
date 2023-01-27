@@ -138,6 +138,12 @@ const baseurl = BASE_URL
       );
       return data;
     };
+    export const getAgentTotalRemitance= async (page,pageSize) => {
+      const { data } = await Axios.get(
+        `${baseurl}agent-total-remittance`,
+      );
+      return data;
+    };
 
     export const getAdminRemitance= async (page,pageSize) => {
       const { data } = await Axios.get(
@@ -161,6 +167,13 @@ const baseurl = BASE_URL
     export const AdminTotalRemits = async (page,pageSize) => {
       const { data } = await Axios.get(
         `${baseurl}admin-total-remittance`,
+      );
+      return data;
+    };
+
+    export const getAgentDailyTotal = async (name) => {
+      const { data } = await Axios.get(
+        `${baseurl}agent-daily-total`,
       );
       return data;
     };

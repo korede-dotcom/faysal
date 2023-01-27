@@ -32,7 +32,7 @@ import styled from "styled-components"
 import Button from '../../reuseable/Button'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import {AgentTotalCustomers,AgentTotalDeposit,Transactions,AdminTotals,AdminDaily} from "../../services/Dashboard"
+import {AgentTotalCustomers,AgentTotalDeposit,Transactions,AdminTotals,AdminDaily,getAgentTotalRemitance,getAgentDailyTotal,AdminTotalRemits} from "../../services/Dashboard"
 import { useLocalStorage } from '../../hooks/GetRole'
 
 
@@ -46,6 +46,17 @@ function Dashboard() {
 
 const isAdmin = check === "ADMIN"
 
+const { data:agentDailyTotal,isLoading:loadingagentdailytotal } = useQuery({
+  
+    queryKey:['getAgentDailyTotal'],
+    queryFn: () => getAgentDailyTotal(),
+    // onError: (err) => {
+    //   setMessage(err?.response?.data?.detail || err.message);
+    //   setOpen(true);
+    // },
+    // enabled: Boolean(agentId),
+  });
+
 
     const { data:agenttotalcustomers,isLoading:loadinAgentTotalCustomers } = useQuery({
   
@@ -57,8 +68,20 @@ const isAdmin = check === "ADMIN"
         // },
         // enabled: Boolean(agentId),
       });
-    console.log("🚀 ~ file: Dashboard.jsx:115 ~ Dashboard ~ agenttotalcustomers", agenttotalcustomers)
+      console.log("🚀 ~ file: Dashboard.jsx:115 ~ Dashboard ~ agenttotalcustomers", agenttotalcustomers)
+      
+      const { data:agenttotalremitance,isLoading:loadinAgentTotalRemitance } = useQuery({
     
+          queryKey:['getAgentTotalRemitance'],
+          queryFn: () => getAgentTotalRemitance(),
+          // onError: (err) => {
+          //   setMessage(err?.response?.data?.detail || err.message);
+          //   setOpen(true);
+          // },
+          // enabled: Boolean(agentId),
+        });
+      console.log("🚀 ~ file: Dashboard.jsx:71 ~ Dashboard ~ agenttotalremitance", agenttotalremitance)
+        const remi = agenttotalremitance;
     const { data:admintTotals,isLoading:totalsLoading } = useQuery({
         queryKey:['AdminTotals'],
         queryFn: () => AdminTotals(),
@@ -92,6 +115,18 @@ const sortTranx = tranx?.content?.map(d => {
 })
 
 
+    const { data:adminRemittance } = useQuery({
+  
+        queryKey:['AdminTotalRemits'],
+        queryFn: () => AdminTotalRemits(),
+        // onError: (err) => {
+        //   setMessage(err?.response?.data?.detail || err.message);
+        //   setOpen(true);
+        // },
+        // enabled: Boolean(agentId),
+      });
+      console.log("🚀 ~ file: Dashboard.jsx:128 ~ Dashboard ~ adminRemittance", adminRemittance)
+      
     const { data:agentTotalDeposit,isLoading:loadingagentTotalDeposit } = useQuery({
   
         queryKey:['AgentTotalDeposit'],
@@ -166,17 +201,17 @@ const sortTranx = tranx?.content?.map(d => {
         {
             isAdmin ?
             <div className='gridcard'>
-                        <Card name="Total Customers" amount={admintTotals?.totalCustomers || 0} amountText="Total Customers" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
-                        <Card name="Total Client Registered" amount={admintTotals?.totalPayOuts || 0} amountText="Total Payouts" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
-                        <Card name="Total Client Registered" amount={admintTotals?.totalRemittance|| 0}  amountText="Total Remittance" cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
-                        <Card name="Total Client Registered" amount={admintTotals?.totalSavings|| 0}  amountText="Total Savings" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
+                        <Card name="Total Customers" amount={admintTotals && admintTotals[0]?.totalCustomers || 0} amountText="Total Customers" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+                        <Card name="Total Client Registered" amount={admintTotals && admintTotals[0]?.totalPayOuts || 0} amountText="Total Payouts" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+                        <Card name="Total Client Registered" amount={adminRemittance && adminRemittance[0].totalRemittance || 0}  amountText="Total Remittance" cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+                        <Card name="Total Client Registered" amount={admintTotals && admintTotals[0]?.totalSavings|| 0}  amountText="Total Savings" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
                     
             </div> :
              <div className='gridcard'>
-             <Card name="Total Client Registered" amount={agenttotalcustomers} amountText="Total Customer" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
-             <Card name="Total Client Registered" amount="-" amountText="Total Payout" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
+             <Card name="Total Client Registered" amount={agenttotalcustomers || 0} amountText="Total Customer" cicon={c1} bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" />
+             <Card name="Total Client Registered" amount={remi && remi[0]?.totalRemittance} amountText="Total Remitance" cicon={c2} bg="#E86B35" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/>
              {/* <Card name="Total Client Registered" amount="500" amountText="Total " cicon={c4} bg="#70D4FF" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)"/> */}
-             <Card name="Total Client Registered" amount={agentTotalDeposit}  amountText="Today Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
+             <Card name="Total Client Registered" amount={agentDailyTotal || 0}  amountText="Today Deposit" cicon={c2} bg="#fff" bxs="0px 4px 11px -1px rgba(0, 0, 0, 0.25)" tc="#000"/>
          
             </div>
         }

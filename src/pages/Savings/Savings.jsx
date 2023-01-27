@@ -170,7 +170,7 @@ function TableHead () {
                 </td>
                 <td> 
                     <span>
-                        <p>CODE</p>
+                        <p>ACCOUNTNAME</p>
                         <img src={sorting}/>
                     </span>
                 </td>

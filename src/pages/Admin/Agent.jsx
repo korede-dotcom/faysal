@@ -44,7 +44,7 @@ const [showImg,setshowImg] = useState(false)
 const [showclient,setShowClient] = useState(false)
 const [showInput,setshowInput] = useState(false)
 const [removal,setremoval] = useState(false)
-
+const [USER,setUSER] = useState("")
 
 function generateRandom() {
     var result           = "AGT";
@@ -122,10 +122,10 @@ const modalBtn = () => {
     setShowModal(true)
     
 }
-const modalclient = () => {
-    setShowModal2(true)
+// const modalclient = () => {
+//     setShowModal2(true)
     
-}
+// }
 
 const handleCreateAgentManager = (e) => {
     e.preventDefault();
@@ -315,6 +315,27 @@ function TableHead () {
     )
 }
 
+const sortAgents = adminUserList?.filter(d => d?.role[0]?.name === "AGENT")?.map(d => {
+    return {
+        agentid:d?.user_id,
+        name:d?.name,
+        phoneNumber:d?.phoneNumber,
+        lga:d?.agentLocation?.lga,
+        location:d?.agentLocation?.name,
+        status:d?.status,
+        id:d.id
+        
+    }
+})
+
+console.log("🚀 ~ file: Agent.jsx:319 ~ sortAgents ~ sortAgents", sortAgents)
+
+const modalclient = (id) => {
+    const USER = sortAgents?.find(d => d?.id === id)
+    setUSER(USER)
+    setShowModal2(true)
+}
+
 function TableData () {
     const sortAgents = adminUserList?.filter(d => d?.role[0]?.name === "AGENT")?.map(d => {
         return {
@@ -323,7 +344,9 @@ function TableData () {
             phoneNumber:d?.phoneNumber,
             lga:d?.agentLocation?.lga,
             location:d?.agentLocation?.name,
-            status:d?.status
+            status:d?.status,
+            id:d.id
+
     
         }
     })
@@ -334,7 +357,7 @@ function TableData () {
                 return val
             }
         })?.map((d,index) => (
-            <tr key={d.id} onClick={modalclient}>
+            <tr key={d.id} onClick={() => modalclient(d.id)}>
                 <td>{index + 1}</td>
                 <td>{d.name}</td>
                 <td>{d.phoneNumber}</td>
@@ -474,23 +497,23 @@ function TableData () {
                         }
 
                 {showModal2 &&
-                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Customer Deposit"  formval={(e) => e.preventDefault()}> 
+                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Agent Info"  formval={(e) => e.preventDefault()}> 
                               {/* <G2C> */}
                               <Client>
                                 <div className='clientside1'>
-                                <img src={card} height="100px"/> 
+                                {/* <img src={card} height="100px"/>  */}
                                 <div className='details'>
-                                <p><small>Name</small>:  Korede</p>
-                                <p><small>PhonNumber</small> : 0808888888</p>
-                                <p><small>Email</small> : korede@live.com</p>
-                                <p><small>Address</small> : 11 lagos island</p>
+                                <p><small>Name</small>: {USER.name}</p>
+                                <p><small>PhonNumber</small> : {USER.phoneNumber}</p>
+                                <p><small>lgs</small> : {USER.lga}</p>
+                                {/* <p><small>Address</small> : {USER.address}</p> */}
                                 
 
                                 </div>
 
                                 </div>
                                 <div className='clientside2'>
-
+{/* 
                                 <div className='amount'>
                                     <p>Total Savings</p>
                                     <h1>#4000</h1>
@@ -504,7 +527,7 @@ function TableData () {
                                 bcg="#0A221C"
                                 display="inline-flex"
                                 clickEvent={() => setshowInput(true)}
-                            />
+                            /> */}
                                 </div>
                                 
 
@@ -558,7 +581,7 @@ const Client = styled.div`
 
 
     .clientside1{
-        border-right: 1px solid #000;
+        /* border-right: 1px solid #000; */
         /* padding-inline-end: 30px; */
         display: inline-flex;
         justify-content: start;
@@ -578,12 +601,12 @@ const Client = styled.div`
         }
     }
     .clientside2{
-        display: inline-flex;
+        /* display: inline-flex;
         justify-content: end;
         flex-direction: column;
         align-items: center;
         gap: 30px;
-        width: 50%;
+        width: 50%; */
         /* border-left: 1px solid #000; */
     }
 

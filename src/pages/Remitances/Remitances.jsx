@@ -20,7 +20,7 @@ import card from "../../assets/card2.svg"
 import Switch from '../../reuseable/Switch'
 import Selector from '../../reuseable/Selector'
 import {useMutation,useQuery} from "@tanstack/react-query"
-import {AgentRemitance,getAgentRemitance,getAdminRemitance,getCurrentUser} from "../../services/Dashboard"
+import {AgentRemitance,getAgentRemitance,getAdminRemitance,getCurrentUser,getAgentDailyTotal} from "../../services/Dashboard"
 
 
 
@@ -166,7 +166,20 @@ const { data:user,isLoading:loadingUser} = useQuery({
     // },
     // enabled: Boolean(agentId),
   });
+
   console.log("🚀 ~ file: Remitances.jsx:170 ~ Deposits ~ adminRemitance", adminRemitance)
+
+  const { data:agentDailyTotal,isLoading:loadingagentdailytotal } = useQuery({
+  
+    queryKey:['getAgentDailyTotal'],
+    queryFn: () => getAgentDailyTotal(),
+    // onError: (err) => {
+    //   setMessage(err?.response?.data?.detail || err.message);
+    //   setOpen(true);
+    // },
+    // enabled: Boolean(agentId),
+  });
+  console.log("🚀 ~ file: Remitances.jsx:182 ~ Deposits ~ agentDailyTotal", agentDailyTotal)
 
   const agentremitanceList = agentremitancelist?.content?.map(d => {
       return {
@@ -336,7 +349,7 @@ function TableData ({data}) {
                                 <div className='clientside1'>
                                     <div className='details'>
                                         <p>Total Amount Collected Today</p>
-                                        <h2># 10,200,022</h2>
+                                        <h2>#{agentDailyTotal}</h2>
                                     </div>
                                 </div>
                                 <div className='clientside2'>
@@ -415,12 +428,13 @@ const Client = styled.div`
         width: 50%;
         flex-direction: column;
         gap: 10px;
-        display: none;
+        /* display: none; */
         .details{
             display: flex;
             flex-direction: column;
             gap: 20px;
-            display: none;
+            /* display: none; */
+            text-align: center;
         }
         @media screen and (max-width:40em){
             border-right: none;

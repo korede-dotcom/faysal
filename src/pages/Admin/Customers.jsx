@@ -45,6 +45,7 @@ const [showImg,setshowImg] = useState(false)
 const [showclient,setShowClient] = useState(false)
 const [showInput,setshowInput] = useState(false)
 const [removal,setremoval] = useState(false)
+const [USER,setUSER] = useState("")
 
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().slice(0, 10);
@@ -99,10 +100,10 @@ const modalBtn = () => {
     setShowModal(true)
     
 }
-const modalclient = () => {
-    setShowModal2(true)
+// const modalclient = () => {
+//     setShowModal2(true)
     
-}
+// }
 const { mutate, isLoading:is_loading,isError} = useMutation({
     mutationFn: createCustomer,
     onSuccess: (data) => {
@@ -344,6 +345,7 @@ function TableHead () {
 
 const sorts = customerlist?.content?.map(d => {
     return {
+        id:d.id,
         name:d.name,
         phoneNumber:d.phoneNumber,
         email:d.email,
@@ -358,6 +360,13 @@ const sorts = customerlist?.content?.map(d => {
     }
 })
 
+
+const modalclient = (id) => {
+    const USER = sorts?.find(d => d?.id === id)
+    setUSER(USER)
+    setShowModal2(true)
+}
+
 function TableData () {
     return (
         sorts?.filter(val => {
@@ -366,7 +375,7 @@ function TableData () {
                 return val
             }
         })?.map((d,index) => (
-            <tr key={d?.id} onClick={modalclient}>
+            <tr key={d?.id} onClick={() => modalclient(d.id)}>
                 <td>{index + 1}</td>
                 <td>{d?.name}</td>
                 <td>{d?.phoneNumber}</td>
@@ -511,24 +520,24 @@ function TableData () {
                         (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Customer Deposit"  formval={(e) => e.preventDefault()}> 
                               {/* <G2C> */}
                               <Client>
-                                <div className='clientside1'>
-                                <img src={card} height="100px"/> 
+                              <div className='clientside1'>
+                                {/* <img src={card} height="100px"/>  */}
                                 <div className='details'>
-                                <p><small>Name</small>:  Korede</p>
-                                <p><small>PhonNumber</small> : 0808888888</p>
-                                <p><small>Email</small> : korede@live.com</p>
-                                <p><small>Address</small> : 11 lagos island</p>
+                                <p><small>Name</small>: {USER.name}</p>
+                                <p><small>PhonNumber</small> : {USER.phoneNumber}</p>
+                                <p><small>Email</small> : {USER.email}</p>
+                                <p><small>Address</small> : {USER.address}</p>
                                 
 
                                 </div>
 
                                 </div>
                                 <div className='clientside2'>
-
+{/* 
                                 <div className='amount'>
                                     <p>Total Savings</p>
                                     <h1>#4000</h1>
-                                </div>
+                                </div> */}
                                {/* {showInput && <Input type="text" textStyle="bold" name="region" change={handleOnChange} placeholder="Enter Amount"/> } */}
 
                                 {/* <Button 
@@ -562,7 +571,11 @@ function TableData () {
 
 const TableContext = styled.div`
   
-
+  @media screen and (max-width:40em ) {
+        padding: 10px;
+        margin-top: 20px;
+    }
+    
 
 `
 const Client = styled.div`
@@ -572,10 +585,17 @@ const Client = styled.div`
     gap: 10px;
     padding: 30px;
     /* overflow: hidden; */
+    height: 80%;
     overflow-y: scroll;
 
+    @media screen and (max-width:40em ) {
+        margin-top: 20px;
+        flex-direction: column;
+    }
+    
+
     .clientside1{
-        border-right: 1px solid #000;
+        /* border-right: 1px solid #000; */
         /* padding-inline-end: 30px; */
         display: inline-flex;
         justify-content: start;
@@ -583,6 +603,11 @@ const Client = styled.div`
         width: 50%;
         flex-direction: column;
         gap: 10px;
+        @media screen and (max-width:40em ) {
+            margin-top: 20px;
+            flex-direction: column;
+            border: none;
+        }
         .details{
             display: flex;
             flex-direction: column;
@@ -595,12 +620,12 @@ const Client = styled.div`
         }
     }
     .clientside2{
-        display: inline-flex;
+        /* display: inline-flex;
         justify-content: end;
         flex-direction: column;
         align-items: center;
         gap: 30px;
-        width: 50%;
+        width: 50%; */
         /* border-left: 1px solid #000; */
     }
 
@@ -620,7 +645,7 @@ const G2C = styled.div`
 width: 100%;
      display: grid;
         gap: 20px;
-        grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
 
         @media screen and (max-width:40em ) {
         /* width: 45%; */
@@ -631,12 +656,24 @@ width: 100%;
                 display: none;
             }
       }
+
      
         img{
             cursor: pointer;
         }
         .forupload{
-            display: inline-flex;
+            /* display: inline-flex; */
+            height: 10px;
+            
+            @media screen and (max-width:40em ) {
+                img{
+                    width: 50% !important;
+
+                }
+        
+        }
+            
+ 
         }
         .checkcheck{
             position: relative;
