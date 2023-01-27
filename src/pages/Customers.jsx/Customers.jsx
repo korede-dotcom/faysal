@@ -413,7 +413,7 @@ function TableData () {
             width="50%" 
             bdr="20px"
             border=".1px solid #000" 
-            change={(e)=>console.log(e.target.value)}
+            change={(e)=>setSearch(e.target.value)}
             placeholder="Search"
             />
     

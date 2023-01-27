@@ -47,7 +47,6 @@ const [forBalanceId,setforBalanceId] = useState(false)
 const [isTwo, setIstwo] = useState(false)
 const [Load, setLoad] = useState(false)
 
-console.log(cdate)
 
 const check = JSON.parse(localStorage.getItem("role"))
 console.log("🚀 ~ file: Savings.jsx:50 ~ Savings ~ check", check)
@@ -204,9 +203,12 @@ const sorted = savinglist?.content?.map(d => {
         tenure:d.tenure,
         startDate:d.startDate,
         endDate:d.endDate,
+        customerName:d?.customer.name
+        
         // phoneNumber:d.cu
     }
 })
+console.log("🚀 ~ file: Savings.jsx:199 ~ sorted ~ savinglist", savinglist)
 const sortedAgent = agentsavinglist?.content?.map(d => {
     
     return{
@@ -216,7 +218,8 @@ const sortedAgent = agentsavinglist?.content?.map(d => {
         tenure:d.tenure,
         startDate:d.startDate,
         endDate:d.endDate,
-        status:d.status
+        status:d.status,
+        customerName:d?.customer.name
         // phoneNumber:d.cu
     }
 })
@@ -241,7 +244,7 @@ function TableData ({data}) {
     })?.map((d,index) => (
             <tr key={d.id} onClick={isAdmin ? null :() => handleAgentSavings(d.id)}>
                 <td>{index + 1}</td>
-                <td>{d?.savingsId}</td>
+                <td>{d?.customerName}</td>
                 <td>{d?.balance}</td>
                 <td>{d?.tenure}</td>
             
@@ -455,8 +458,10 @@ const withdrawFund = (e) => {
                                 {err && <p style={{color:"red"}}>{err}</p> }
                                 <h4 style={{borderBottom:'1 solid #000'}}>Savings Details</h4>
                                 <p>SAVINGS ID: {currentSavingns[0]?.savingsId} </p>
+                                <p>CUSTOMER NAME: {currentSavingns[0]?.customerName} </p>
                                 <p>BALANCE: {currentSavingns[0]?.balance} </p>
                                 <p>TENURE : {currentSavingns[0]?.tenure}</p>
+                                <p>DUE DATE : {currentSavingns[0]?.endDate}</p>
                                 <p>STATUS : {currentSavingns[0]?.status}</p>
                                 
                                  <Input type="text" textStyle="bold" name="region" change={(e) => setAmount(e.target.value)} placeholder="Enter Amount"/> 

@@ -35,6 +35,8 @@ const [showInput,setshowInput] = useState(false)
 const [amount,setamount] = useState(null)
 const [paymentReferenceNumber,setpaymentReferenceNumber] = useState(null)
 const [agentId,setagentId] = useState(null)
+const [search, setSearch] = useState('')
+
 
 const check = JSON.parse(localStorage.getItem("role"))
 const cUser = JSON.parse(localStorage.getItem("userId"))
@@ -294,7 +296,12 @@ function TableHead () {
 function TableData ({data}) {
     
     return (
-        data?.map((d,index) => (
+        data?.filter(val => {
+            if(!search?.length) return val
+            else if(Object.values(val).some(value => value?.toString()?.toLowerCase()?.includes(search))){
+                return val
+            }
+        }).map((d,index) => (
             <tr key={d.id}>
                 <td>{index + 1}</td>
                 <td>{d?.paymentReferenceNumber}</td>
@@ -328,7 +335,7 @@ function TableData ({data}) {
             width="50%" 
             bdr="20px"
             border=".1px solid #000" 
-            change={(e)=>console.log(e.target.value)}
+            change={(e)=> setSearch(e.target.value)}
             placeholder="Search Remitance"
             />
         {!isAdmin &&
@@ -348,7 +355,7 @@ function TableData ({data}) {
            <Client>
                                 <div className='clientside1'>
                                     <div className='details'>
-                                        <p>Total Amount Collected Today</p>
+                                        <p>Total Cash at hand</p>
                                         <h2>#{agentDailyTotal}</h2>
                                     </div>
                                 </div>

@@ -296,7 +296,7 @@ function TableHead () {
                 {/* {keys.map(d => ( */}
                 <td> 
                     <span>
-                        <p>NO</p>
+                        <p>SN</p>
                         <img src={sorting}/>
                     </span>
                 </td>
@@ -326,7 +326,7 @@ function TableHead () {
                 </td>
                 <td>
                     <span>
-                        <p>GENDER</p>
+                        <p>AGENT</p>
                         <img src={sorting}/>
                     </span>
                 </td>
@@ -381,7 +381,7 @@ function TableData () {
                 <td>{d?.phoneNumber}</td>
                 <td>{d?.address}</td>
                 <td>{d?.email}</td>
-                <td>{d?.gender}</td>
+                <td>{d?.agentName}</td>
                 <td>{d?.date_of_birth}</td>
                 {/* <td>{d?.agent?.username}</td>
                 <td>{d?.agent?.phoneNumber}</td> */}
@@ -517,7 +517,7 @@ function TableData () {
                         }
 
                 {showModal2 &&
-                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Customer Deposit"  formval={(e) => e.preventDefault()}> 
+                        (<Modal show={isActive} closeModal={() => setShowModal2(false)} headText="Customer Details"  formval={(e) => e.preventDefault()}> 
                               {/* <G2C> */}
                               <Client>
                               <div className='clientside1'>
